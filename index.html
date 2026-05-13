@@ -173,51 +173,81 @@
     }
     .field-err.on { display: block; }
 
-    /* ── GRADE DE PRODUTOS ── */
-    .marca-section { margin-bottom: 24px; }
-    .marca-section:last-child { margin-bottom: 0; }
-
-    .marca-header {
+    /* ── BLOCO DE PRODUTO ── */
+    .prod-bloco {
+      background: #FAF5EE;
+      border: 1.5px solid #E8D9C4;
+      border-radius: 8px;
+      padding: 18px 20px 16px;
+      margin-bottom: 12px;
+    }
+    .prod-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .prod-num {
       font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: 14px;
-      letter-spacing: 2.5px;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
       color: var(--brown-mid);
-      padding-bottom: 8px;
-      border-bottom: 2px solid var(--gold-dk);
-      margin-bottom: 4px;
     }
+    .btn-rem {
+      background: none;
+      border: 1px solid #DDD0C0;
+      border-radius: 5px;
+      padding: 4px 11px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Barlow', sans-serif;
+      color: #999;
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .btn-rem:hover { border-color: var(--red); color: var(--red); background: rgba(201,43,30,.05); }
+    .prod-bloco:first-child .btn-rem { display: none; }
 
-    .prod-row {
+    .prod-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 90px;
+      gap: 12px;
+      align-items: end;
+    }
+    @media (max-width: 560px) {
+      .prod-grid { grid-template-columns: 1fr 1fr; }
+      .prod-grid .field:last-child { grid-column: 1 / -1; }
+    }
+    @media (max-width: 380px) { .prod-grid { grid-template-columns: 1fr; } }
+
+    /* ── BTN ADICIONAR ── */
+    .btn-add {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 10px 4px;
-      border-bottom: 1px solid rgba(200,148,26,.12);
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: none;
+      border: 1.5px dashed var(--gold-dk);
+      border-radius: 8px;
+      padding: 13px 20px;
+      color: var(--gold-dk);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all .18s;
     }
-    .prod-row:last-child { border-bottom: none; }
-
-    .prod-nome {
-      font-size: 15px;
-      color: var(--brown);
-      flex: 1;
-    }
-
-    .prod-row .inp-qty {
-      width: 90px;
-      flex-shrink: 0;
-      text-align: center;
-      padding: 9px 10px;
-    }
+    .btn-add:hover { background: rgba(200,148,26,.07); border-color: var(--gold-lt); color: var(--gold-lt); }
 
     .err-prod {
       display: none;
       font-size: 12px;
       color: var(--red);
       font-weight: 500;
-      margin-top: 12px;
+      margin-top: 8px;
     }
 
     /* ── TOTAIS ── */
@@ -479,7 +509,14 @@
       </div>
       <div class="card-body">
         <div id="prod-container"></div>
-        <p class="err-prod" id="err-prod">Informe a quantidade de ao menos um produto.</p>
+        <button type="button" class="btn-add" id="btn-add">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M8 5v6M5 8h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          Adicionar produto
+        </button>
+        <p class="err-prod" id="err-prod">Adicione ao menos um produto.</p>
       </div>
     </div>
 
@@ -539,52 +576,89 @@
   const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyKGw7Xyokp1UrzXbH1LHaTF_ZFVzHkn5tX43t3kjH0MTL7Q_n9mvfnMouVFmQotF5C/exec';
   const VALOR_SC_UN = 0.50;
 
-  const CATALOGO = [
-    {
-      fornecedor: 'Germânia',
-      key: 'Germania',
-      estilos: ['Pilsen', 'Vinhedo', 'Escuro']
-    },
-    {
-      fornecedor: 'Nineties Beer',
-      key: 'Nineties',
-      estilos: ['[PLACEHOLDER]']
-    },
-    {
-      fornecedor: 'Pangea',
-      key: 'Pangea',
-      estilos: ['[PLACEHOLDER]']
-    }
-  ];
+  const CATALOGO = {
+    'Germania':  { label: 'Germânia',     estilos: ['Pilsen', 'Vinhedo', 'Escuro'] },
+    'Nineties':  { label: 'Nineties Beer', estilos: ['[PLACEHOLDER]'] },
+    'Pangea':    { label: 'Pangea',        estilos: ['[PLACEHOLDER]'] }
+  };
+
+  let blocoSeq = 0;
 
   // ─── BOOT ─────────────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
-    gerarGrade();
+    adicionarBloco();
+    document.getElementById('btn-add').addEventListener('click', adicionarBloco);
     document.getElementById('form-brinde').addEventListener('submit', onSubmit);
     document.getElementById('btn-novo').addEventListener('click', resetarForm);
     document.getElementById('cnpj').addEventListener('input', mascaraCNPJ);
   });
 
-  // ─── GRADE DE PRODUTOS ────────────────────────────────────────────────────────
-  function gerarGrade() {
+  // ─── BLOCOS DE PRODUTO ────────────────────────────────────────────────────────
+  function adicionarBloco() {
+    blocoSeq++;
     const container = document.getElementById('prod-container');
-    CATALOGO.forEach(marca => {
-      const section = document.createElement('div');
-      section.className = 'marca-section';
-      section.innerHTML = `<div class="marca-header">${marca.fornecedor}</div>`;
-      marca.estilos.forEach(estilo => {
-        const row = document.createElement('div');
-        row.className = 'prod-row';
-        row.dataset.fornecedor = marca.key;
-        row.dataset.estilo = estilo;
-        row.innerHTML = `
-          <span class="prod-nome">${estilo}</span>
-          <input type="number" class="inp-qty" min="0" placeholder="0" oninput="recalc()">
-        `;
-        section.appendChild(row);
-      });
-      container.appendChild(section);
+    const opcoesForncedor = Object.entries(CATALOGO)
+      .map(([key, m]) => `<option value="${key}">${m.label}</option>`)
+      .join('');
+
+    const div = document.createElement('div');
+    div.className = 'prod-bloco';
+    div.innerHTML = `
+      <div class="prod-top">
+        <span class="prod-num">Produto ${blocoSeq}</span>
+        <button type="button" class="btn-rem" onclick="removerBloco(this)">Remover</button>
+      </div>
+      <div class="prod-grid">
+        <div class="field">
+          <label>Fornecedor <span class="req">*</span></label>
+          <select class="sel-forn" onchange="atualizarEstilos(this)">
+            <option value="">Selecione…</option>
+            ${opcoesForncedor}
+          </select>
+        </div>
+        <div class="field">
+          <label>Estilo <span class="req">*</span></label>
+          <select class="sel-estilo" disabled>
+            <option value="">Selecione o fornecedor</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Qtd. <span class="req">*</span></label>
+          <input type="number" class="inp-qty" min="1" placeholder="0" oninput="recalc()">
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+    renumerar();
+  }
+
+  function removerBloco(btn) {
+    const container = document.getElementById('prod-container');
+    if (container.children.length <= 1) return;
+    btn.closest('.prod-bloco').remove();
+    renumerar();
+    recalc();
+  }
+
+  function renumerar() {
+    document.querySelectorAll('.prod-bloco .prod-num').forEach((el, i) => {
+      el.textContent = `Produto ${i + 1}`;
     });
+  }
+
+  function atualizarEstilos(sel) {
+    const bloco    = sel.closest('.prod-bloco');
+    const selEstilo = bloco.querySelector('.sel-estilo');
+    const key      = sel.value;
+    const marca    = CATALOGO[key];
+
+    selEstilo.innerHTML = marca
+      ? '<option value="">Selecione…</option>' + marca.estilos.map(e => `<option value="${e}">${e}</option>`).join('')
+      : '<option value="">Selecione o fornecedor</option>';
+
+    selEstilo.disabled = !key;
+    sel.classList.remove('err');
+    selEstilo.classList.remove('err');
   }
 
   // ─── MÁSCARA CNPJ ─────────────────────────────────────────────────────────────
@@ -627,13 +701,21 @@
     check('cnpj',         'err-cnpj',  v => /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/.test(v));
     check('email',        'err-email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()));
 
-    const algumProd = Array.from(document.querySelectorAll('.inp-qty'))
-      .some(inp => parseInt(inp.value, 10) > 0);
+    const blocos = document.querySelectorAll('.prod-bloco');
     const errProd = document.getElementById('err-prod');
-    if (!algumProd) {
+    if (blocos.length === 0) {
       errProd.style.display = 'block'; ok = false;
     } else {
       errProd.style.display = 'none';
+      blocos.forEach(b => {
+        const sf = b.querySelector('.sel-forn');
+        const se = b.querySelector('.sel-estilo');
+        const qi = b.querySelector('.inp-qty');
+        if (!sf.value) { sf.classList.add('err'); ok = false; } else sf.classList.remove('err');
+        if (!se.value) { se.classList.add('err'); ok = false; } else se.classList.remove('err');
+        const qv = parseInt(qi.value, 10);
+        if (isNaN(qv) || qv < 1) { qi.classList.add('err'); ok = false; } else qi.classList.remove('err');
+      });
     }
 
     return ok;
@@ -642,15 +724,12 @@
   // ─── COLETA DADOS ─────────────────────────────────────────────────────────────
   function coletar() {
     const produtos = [];
-    document.querySelectorAll('.prod-row').forEach(row => {
-      const qty = parseInt(row.querySelector('.inp-qty').value, 10);
-      if (qty > 0) {
-        produtos.push({
-          cervejaria: row.dataset.fornecedor,
-          produto:    row.dataset.estilo,
-          quantidade: qty
-        });
-      }
+    document.querySelectorAll('.prod-bloco').forEach(b => {
+      produtos.push({
+        cervejaria: b.querySelector('.sel-forn').value,
+        produto:    b.querySelector('.sel-estilo').value,
+        quantidade: parseInt(b.querySelector('.inp-qty').value, 10)
+      });
     });
     const totalUnidades   = produtos.reduce((s, p) => s + p.quantidade, 0);
     const valorArrecadado = (totalUnidades * VALOR_SC_UN).toFixed(2);
@@ -738,10 +817,9 @@
       el.classList.remove('err');
     });
     document.querySelectorAll('.field-err').forEach(e => e.classList.remove('on'));
-    document.querySelectorAll('.inp-qty').forEach(inp => {
-      inp.value = '';
-      inp.classList.remove('err');
-    });
+    document.getElementById('prod-container').innerHTML = '';
+    blocoSeq = 0;
+    adicionarBloco();
     recalc();
     document.getElementById('feedback-sucesso').hidden = true;
     document.getElementById('feedback-erro').hidden    = true;
