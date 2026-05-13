@@ -558,7 +558,7 @@
     <div class="suc-header">
       <div class="suc-icon" aria-hidden="true">✓</div>
       <h2>Pedido Registrado!</h2>
-      <p>Os dados foram enviados com sucesso.</p>
+      <p id="suc-header-msg">Os dados foram enviados com sucesso.</p>
     </div>
     <div class="suc-body">
       <div class="suc-resumo">
@@ -855,28 +855,50 @@
     btn.disabled = true;
     btn.classList.add('loading');
 
-    try {
-      await Promise.all([postMkt(dados), postCrm(dados)]);
+    // Chama cada integração de forma independente para diagnóstico preciso
+    let mktOk = false, crmOk = false;
+    let mktErr = '', crmErr = '';
+
+    try { await postMkt(dados); mktOk = true; }
+    catch (err) {
+      console.error('[RD Marketing]', err);
+      mktErr = err.message || 'Erro desconhecido';
+      if (mktErr.toLowerCase().includes('failed to fetch')) mktErr = 'Failed to fetch (possível CORS ou token inválido)';
+    }
+
+    try { await postCrm(dados); crmOk = true; }
+    catch (err) {
+      console.error('[RD CRM]', err);
+      crmErr = err.message || 'Erro desconhecido';
+      if (crmErr.toLowerCase().includes('failed to fetch')) crmErr = 'Failed to fetch (possível CORS ou token inválido)';
+    }
+
+    btn.disabled = false;
+    btn.classList.remove('loading');
+
+    if (mktOk && crmOk) {
       mostrarSucesso(dados);
-    } catch (err) {
-      console.error('[Brinde Solidário]', err);
-      let msg = err.message || 'Erro desconhecido.';
-      if (!navigator.onLine) {
-        msg = 'Sem conexão com a internet. Verifique sua rede e tente novamente.';
-      } else if (msg.toLowerCase().includes('failed to fetch') || msg.toLowerCase().includes('cors')) {
-        msg = 'Não foi possível conectar à API. Verifique se o token está correto e se a origem está autorizada nas configurações do RD Station CRM. Em alguns ambientes é necessário um proxy CORS.';
-      }
-      document.getElementById('erro-msg').textContent = msg;
-      document.getElementById('feedback-erro').hidden = false;
-      document.getElementById('feedback-erro').scrollIntoView({ behavior: 'smooth' });
-    } finally {
-      btn.disabled = false;
-      btn.classList.remove('loading');
+      return;
+    }
+
+    // Monta diagnóstico detalhado
+    const linhas = [
+      `RD Station Marketing: ${mktOk ? '✓ enviado com sucesso' : '✗ ' + mktErr}`,
+      `RD Station CRM:       ${crmOk ? '✓ card criado'        : '✗ ' + crmErr}`
+    ].join('\n');
+
+    document.getElementById('erro-msg').innerText = linhas;
+    document.getElementById('feedback-erro').hidden = false;
+    document.getElementById('feedback-erro').scrollIntoView({ behavior: 'smooth' });
+
+    // Se pelo menos o Marketing passou, mostra aviso mas não bloqueia
+    if (mktOk) {
+      mostrarSucesso(dados, true);
     }
   }
 
   // ─── SUCESSO ──────────────────────────────────────────────────────────────────
-  function mostrarSucesso(d) {
+  function mostrarSucesso(d, parcial = false) {
     const valorFmt = Number(d.valorArrecadado).toLocaleString('pt-BR', {
       style: 'currency', currency: 'BRL'
     });
@@ -897,6 +919,9 @@
       .join('');
 
     document.getElementById('suc-valor-sc').textContent = valorFmt;
+    document.getElementById('suc-header-msg').textContent = parcial
+      ? 'Marketing registrado. Veja o diagnóstico abaixo para o CRM.'
+      : 'Os dados foram enviados com sucesso.';
     document.getElementById('form-brinde').hidden = true;
     document.getElementById('feedback-sucesso').hidden = false;
     window.scrollTo({ top: 0, behavior: 'smooth' });
