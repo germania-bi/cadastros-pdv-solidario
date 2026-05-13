@@ -7,9 +7,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --amber:     #C8941A;
-      --amber-lt:  #FFA62C;
-      --amber-dk:  #A07210;
+      --amber:     #E8921A;
+      --amber-lt:  #F5A830;
+      --amber-dk:  #C07010;
       --dark:      #1A1208;
       --dark-mid:  #5C3D1E;
       --cream:     #FDF0D0;
@@ -29,7 +29,7 @@
 
     /* ── HEADER ── */
     .site-header {
-      background: var(--dark);
+      background: var(--amber);
       padding: 32px 24px 28px;
       text-align: center;
       position: relative;
@@ -48,7 +48,7 @@
       font-size: 12px;
       letter-spacing: 4px;
       text-transform: uppercase;
-      color: rgba(255,255,255,.6);
+      color: rgba(26,18,8,.6);
       margin-bottom: 10px;
     }
     .header-title {
@@ -56,27 +56,33 @@
       font-weight: 900;
       font-size: clamp(30px, 6vw, 52px);
       text-transform: uppercase;
-      color: #fff;
+      color: var(--dark);
       line-height: 1;
       letter-spacing: 1px;
     }
-    .header-title span { color: var(--amber-lt); }
+    .header-title span {
+      display: inline-block;
+      background: var(--dark);
+      color: #fff;
+      padding: 0 10px;
+      border-radius: 4px;
+    }
     .header-sub {
       margin-top: 8px;
       font-size: 14px;
       font-weight: 500;
-      color: rgba(255,255,255,.7);
+      color: rgba(26,18,8,.7);
     }
     .header-badge {
       display: inline-block;
       margin-top: 16px;
-      background: rgba(255,255,255,.1);
-      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(26,18,8,.1);
+      border: 1px solid rgba(26,18,8,.25);
       border-radius: 999px;
       padding: 6px 20px;
       font-size: 13px;
       font-weight: 600;
-      color: rgba(255,255,255,.88);
+      color: rgba(26,18,8,.85);
     }
 
     /* ── LAYOUT ── */
