@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Pedido — Brinde Solidário Germânia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red:       #C92B1E;
+      --red-dk:    #A8221A;
+      --gold-dk:   #C8941A;
+      --gold-lt:   #FFA62C;
+      --cream:     #F1E3CE;
+      --brown:     #1A1208;
+      --brown-mid: #5C3D1E;
+      --radius:    10px;
+      --shadow:    0 4px 24px rgba(26,18,8,.10);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--cream);
+      color: var(--brown);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      background: var(--red);
+      padding: 32px 24px 28px;
+      text-align: center;
+      position: relative;
+    }
+    .site-header::after {
+      content: '';
+      display: block;
+      height: 4px;
+      background: linear-gradient(90deg, var(--gold-dk), var(--gold-lt), var(--gold-dk));
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+    }
+    .header-marca {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.6);
+      margin-bottom: 10px;
+    }
+    .header-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(30px, 6vw, 52px);
+      text-transform: uppercase;
+      color: #fff;
+      line-height: 1;
+      letter-spacing: 1px;
+    }
+    .header-title span { color: var(--gold-lt); }
+    .header-sub {
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,.7);
+    }
+    .header-badge {
+      display: inline-block;
+      margin-top: 16px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      padding: 6px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,.88);
+    }
+
+    /* ── LAYOUT ── */
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 36px 20px 64px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+      overflow: hidden;
+    }
+    .card-header {
+      background: var(--brown);
+      padding: 13px 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-dot {
+      width: 8px; height: 8px;
+      background: var(--gold-lt);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .card-header h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .card-body { padding: 24px; }
+
+    /* ── CAMPOS ── */
+    .field { margin-bottom: 18px; }
+    .field:last-child { margin-bottom: 0; }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 520px) { .row-2 { grid-template-columns: 1fr; } }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold-dk);
+      margin-bottom: 6px;
+    }
+    label .req { color: var(--red); margin-left: 2px; }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #DDD0C0;
+      border-radius: 6px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 15px;
+      color: var(--brown);
+      background: #FDFAF5;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C8941A' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 13px center;
+      padding-right: 34px;
+    }
+    input:focus, select:focus {
+      border-color: var(--gold-dk);
+      box-shadow: 0 0 0 3px rgba(200,148,26,.13);
+    }
+    input.err, select.err {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(201,43,30,.09);
+    }
+    .field-err {
+      display: none;
+      font-size: 12px;
+      color: var(--red);
+      font-weight: 500;
+      margin-top: 5px;
+    }
+    .field-err.on { display: block; }
+
+    /* ── BLOCO DE PRODUTO ── */
+    .prod-bloco {
+      background: #FAF5EE;
+      border: 1.5px solid #E8D9C4;
+      border-radius: 8px;
+      padding: 18px 20px 16px;
+      margin-bottom: 12px;
+    }
+    .prod-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .prod-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--brown-mid);
+    }
+    .btn-rem {
+      background: none;
+      border: 1px solid #DDD0C0;
+      border-radius: 5px;
+      padding: 4px 11px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Barlow', sans-serif;
+      color: #999;
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .btn-rem:hover { border-color: var(--red); color: var(--red); background: rgba(201,43,30,.05); }
+    .prod-bloco:first-child .btn-rem { display: none; }
+
+    .prod-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 90px;
+      gap: 12px;
+      align-items: end;
+    }
+    @media (max-width: 560px) {
+      .prod-grid { grid-template-columns: 1fr 1fr; }
+      .prod-grid .field:last-child { grid-column: 1 / -1; }
+    }
+    @media (max-width: 380px) { .prod-grid { grid-template-columns: 1fr; } }
+
+    /* ── BTN ADICIONAR ── */
+    .btn-add {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: none;
+      border: 1.5px dashed var(--gold-dk);
+      border-radius: 8px;
+      padding: 13px 20px;
+      color: var(--gold-dk);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .btn-add:hover { background: rgba(200,148,26,.07); border-color: var(--gold-lt); color: var(--gold-lt); }
+
+    .err-prod {
+      display: none;
+      font-size: 12px;
+      color: var(--red);
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    /* ── TOTAIS ── */
+    .totais-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 460px) { .totais-grid { grid-template-columns: 1fr; } }
+
+    .total-box {
+      background: var(--cream);
+      border-radius: 8px;
+      padding: 18px 20px;
+      text-align: center;
+    }
+    .total-box.dest { background: var(--brown); }
+    .total-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold-dk);
+      margin-bottom: 6px;
+    }
+    .total-box.dest .total-lbl { color: var(--gold-lt); }
+    .total-val {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 34px;
+      color: var(--brown);
+      line-height: 1;
+    }
+    .total-box.dest .total-val { color: #fff; font-size: 28px; }
+
+    /* ── SUBMIT ── */
+    .btn-submit {
+      display: block;
+      width: 100%;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 18px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 16px rgba(201,43,30,.28);
+    }
+    .btn-submit:hover:not(:disabled) {
+      background: var(--red-dk);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(201,43,30,.38);
+    }
+    .btn-submit:disabled { opacity: .6; cursor: not-allowed; }
+
+    .spinner {
+      display: none;
+      width: 20px; height: 20px;
+      border: 2.5px solid rgba(255,255,255,.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 0 auto;
+    }
+    .btn-submit.loading .btn-txt { display: none; }
+    .btn-submit.loading .spinner { display: block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── ERRO GLOBAL ── */
+    .erro-box {
+      background: #FFF5F5;
+      border: 1.5px solid #FFCDD0;
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      margin-bottom: 22px;
+    }
+    .erro-box h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 5px;
+    }
+    .erro-box p { font-size: 14px; color: #7A2A2A; line-height: 1.5; }
+
+    /* ── SUCESSO ── */
+    #feedback-sucesso {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .suc-header {
+      background: #1A6635;
+      padding: 32px 24px;
+      text-align: center;
+    }
+    .suc-icon {
+      width: 58px; height: 58px;
+      background: rgba(255,255,255,.18);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-size: 28px;
+      line-height: 1;
+    }
+    .suc-header h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 28px;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .suc-header p { font-size: 14px; color: rgba(255,255,255,.75); margin-top: 4px; }
+
+    .suc-body { padding: 28px 24px; }
+
+    .suc-resumo {
+      background: var(--cream);
+      border-radius: 8px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+    }
+    .suc-resumo h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold-dk);
+      margin-bottom: 12px;
+    }
+    .suc-linha {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      padding: 6px 0;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(200,148,26,.14);
+    }
+    .suc-linha:last-child { border-bottom: none; padding-bottom: 0; }
+    .suc-lbl { color: var(--brown-mid); flex-shrink: 0; }
+    .suc-val { font-weight: 600; color: var(--brown); text-align: right; word-break: break-word; }
+
+    .sc-box {
+      background: var(--brown);
+      border-radius: 8px;
+      padding: 22px 20px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .sc-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold-lt);
+      margin-bottom: 8px;
+    }
+    .sc-valor {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 42px;
+      color: #fff;
+      line-height: 1;
+    }
+    .sc-sub { font-size: 12px; color: rgba(255,255,255,.55); margin-top: 5px; }
+
+    .btn-novo {
+      display: block;
+      width: 100%;
+      background: none;
+      border: 2px solid var(--red);
+      color: var(--red);
+      border-radius: 8px;
+      padding: 14px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-novo:hover { background: var(--red); color: #fff; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 12px;
+      color: var(--brown-mid);
+      opacity: .55;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <p class="header-marca">Cervejaria Germânia</p>
+  <h1 class="header-title">Brinde <span>Solidário</span></h1>
+  <p class="header-sub">Registro de Pedidos — PDV Parceiro</p>
+  <span class="header-badge">R$ 0,50 por unidade vendida &rarr; Santa Casa</span>
+</header>
+
+<main>
+
+  <!-- ERRO GLOBAL -->
+  <div id="feedback-erro" class="erro-box" hidden>
+    <h3>Erro ao registrar pedido</h3>
+    <p id="erro-msg"></p>
+  </div>
+
+  <!-- FORMULÁRIO -->
+  <form id="form-brinde" novalidate>
+
+    <!-- IDENTIFICAÇÃO DO PDV -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-dot"></div>
+        <h2>Identificação do PDV</h2>
+      </div>
+      <div class="card-body">
+        <div class="field">
+          <label for="razao-social">Razão Social <span class="req">*</span></label>
+          <input type="text" id="razao-social" placeholder="Ex.: Distribuidora Exemplo Ltda.">
+          <span class="field-err" id="err-rs">Campo obrigatório.</span>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="cnpj">CNPJ <span class="req">*</span></label>
+            <input type="text" id="cnpj" placeholder="00.000.000/0000-00" maxlength="18" inputmode="numeric">
+            <span class="field-err" id="err-cnpj">CNPJ inválido.</span>
+          </div>
+          <div class="field">
+            <label for="email">E-mail do responsável <span class="req">*</span></label>
+            <input type="email" id="email" placeholder="contato@pdv.com.br">
+            <span class="field-err" id="err-email">E-mail inválido.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUTOS -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-dot"></div>
+        <h2>Produtos Vendidos</h2>
+      </div>
+      <div class="card-body">
+        <div id="prod-container"></div>
+        <button type="button" class="btn-add" id="btn-add">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M8 5v6M5 8h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          Adicionar produto
+        </button>
+        <p class="err-prod" id="err-prod">Adicione ao menos um produto.</p>
+      </div>
+    </div>
+
+    <!-- TOTAIS -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-dot"></div>
+        <h2>Totais da Campanha</h2>
+      </div>
+      <div class="card-body">
+        <div class="totais-grid">
+          <div class="total-box">
+            <div class="total-lbl">Total de unidades</div>
+            <div class="total-val" id="total-un">0</div>
+          </div>
+          <div class="total-box dest">
+            <div class="total-lbl">Destinado à Santa Casa</div>
+            <div class="total-val" id="total-sc">R$ 0,00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-submit" id="btn-submit">
+      <span class="btn-txt">Registrar Pedido</span>
+      <span class="spinner" aria-hidden="true"></span>
+    </button>
+
+  </form>
+
+  <!-- SUCESSO -->
+  <div id="feedback-sucesso" hidden>
+    <div class="suc-header">
+      <div class="suc-icon" aria-hidden="true">✓</div>
+      <h2>Pedido Registrado!</h2>
+      <p>Os dados foram enviados com sucesso.</p>
+    </div>
+    <div class="suc-body">
+      <div class="suc-resumo">
+        <h3>Resumo</h3>
+        <div id="suc-itens"></div>
+      </div>
+      <div class="sc-box">
+        <div class="sc-lbl">Valor destinado à Santa Casa</div>
+        <div class="sc-valor" id="suc-valor-sc"></div>
+        <div class="sc-sub">referente a este pedido</div>
+      </div>
+      <button class="btn-novo" id="btn-novo">+ Registrar novo pedido</button>
+    </div>
+  </div>
+
+</main>
+
+<footer>Campanha Brinde Solidário &mdash; Cervejaria Germânia &copy; 2026</footer>
+
+<script>
+  // ─── CONFIGURAÇÃO ─────────────────────────────────────────────────────────────
+  // ⚠️ Inserir tokens antes de publicar no GitHub Pages
+  const RD_MKT_TOKEN = '89f5be574f4bf822d7c4a54e042ff491';
+  const RD_CRM_TOKEN = '694a7f59c0e19c0013e40ac2';
+
+  // IDs dos campos customizados no RD CRM
+  // Para descobrir: GET https://crm.rdstation.com/api/v1/custom_fields?token=SEU_TOKEN
+  // Substitua os placeholders abaixo pelos _id retornados pela API:
+  const CF_CNPJ             = 'CF_ID_CNPJ_AQUI';
+  const CF_PRODUTOS         = 'CF_ID_PRODUTOS_AQUI';
+  const CF_TOTAL_UNIDADES   = 'CF_ID_TOTAL_UNIDADES_AQUI';
+  const CF_VALOR_ARRECADADO = 'CF_ID_VALOR_ARRECADADO_AQUI';
+
+  const VALOR_SC_UN   = 0.50;
+  const PIPELINE_NOME = 'Campanha Brinde Solidário';
+  const ETAPA_NOME    = 'Pedido Registrado';
+
+  // ─── CATÁLOGO ─────────────────────────────────────────────────────────────────
+  const CATALOGO = {
+    'Germania': ['Germânia Pilsen', 'Germânia Vinhedo', 'Germânia Escuro'],
+    'Nineties': ['[PLACEHOLDER — a definir]'],
+    'Pangea':   ['[PLACEHOLDER — a definir]']
+  };
+
+  // ─── ESTADO ───────────────────────────────────────────────────────────────────
+  let blocoSeq = 0;
+
+  // ─── BOOT ─────────────────────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    adicionarBloco();
+    document.getElementById('btn-add').addEventListener('click', adicionarBloco);
+    document.getElementById('form-brinde').addEventListener('submit', onSubmit);
+    document.getElementById('btn-novo').addEventListener('click', resetarForm);
+    document.getElementById('cnpj').addEventListener('input', mascaraCNPJ);
+  });
+
+  // ─── MÁSCARA CNPJ ─────────────────────────────────────────────────────────────
+  function mascaraCNPJ(e) {
+    let d = e.target.value.replace(/\D/g, '').slice(0, 14);
+    if (d.length > 12)      d = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, '$1.$2.$3/$4-$5');
+    else if (d.length > 8)  d = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4})/,        '$1.$2.$3/$4');
+    else if (d.length > 5)  d = d.replace(/^(\d{2})(\d{3})(\d{0,3})/,               '$1.$2.$3');
+    else if (d.length > 2)  d = d.replace(/^(\d{2})(\d{0,3})/,                       '$1.$2');
+    e.target.value = d;
+  }
+
+  // ─── BLOCOS DE PRODUTO ────────────────────────────────────────────────────────
+  function adicionarBloco() {
+    blocoSeq++;
+    const container = document.getElementById('prod-container');
+    const n = blocoSeq;
+
+    const div = document.createElement('div');
+    div.className = 'prod-bloco';
+    div.innerHTML = `
+      <div class="prod-top">
+        <span class="prod-num">Produto 1</span>
+        <button type="button" class="btn-rem" onclick="removerBloco(this)">Remover</button>
+      </div>
+      <div class="prod-grid">
+        <div class="field">
+          <label>Cervejaria <span class="req">*</span></label>
+          <select class="sel-cerv" onchange="atualizarProdutos(this)">
+            <option value="">Selecione…</option>
+            <option value="Germania">Germânia</option>
+            <option value="Nineties">Nineties Beer</option>
+            <option value="Pangea">Pangea</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Produto <span class="req">*</span></label>
+          <select class="sel-prod" disabled>
+            <option value="">Selecione a cervejaria</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Qtd. <span class="req">*</span></label>
+          <input type="number" class="inp-qty" min="1" placeholder="0" oninput="recalc()">
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+    renumerar();
+  }
+
+  function removerBloco(btn) {
+    const container = document.getElementById('prod-container');
+    if (container.children.length <= 1) return;
+    btn.closest('.prod-bloco').remove();
+    renumerar();
+    recalc();
+  }
+
+  function renumerar() {
+    document.querySelectorAll('.prod-bloco .prod-num').forEach((el, i) => {
+      el.textContent = `Produto ${i + 1}`;
+    });
+  }
+
+  function atualizarProdutos(sel) {
+    const bloco = sel.closest('.prod-bloco');
+    const selProd = bloco.querySelector('.sel-prod');
+    const cerv = sel.value;
+
+    selProd.innerHTML = cerv && CATALOGO[cerv]
+      ? '<option value="">Selecione…</option>' + CATALOGO[cerv].map(p => `<option value="${p}">${p}</option>`).join('')
+      : '<option value="">Selecione a cervejaria</option>';
+
+    selProd.disabled = !cerv;
+    sel.classList.remove('err');
+    selProd.classList.remove('err');
+  }
+
+  // ─── TOTAIS ───────────────────────────────────────────────────────────────────
+  function recalc() {
+    let total = 0;
+    document.querySelectorAll('.inp-qty').forEach(inp => {
+      const v = parseInt(inp.value, 10);
+      if (!isNaN(v) && v > 0) total += v;
+    });
+    document.getElementById('total-un').textContent = total;
+    document.getElementById('total-sc').textContent =
+      'R$ ' + (total * VALOR_SC_UN).toFixed(2).replace('.', ',');
+  }
+
+  // ─── VALIDAÇÃO ────────────────────────────────────────────────────────────────
+  function validar() {
+    let ok = true;
+
+    function check(id, errId, cond) {
+      const el = document.getElementById(id);
+      const er = document.getElementById(errId);
+      if (!cond(el.value)) {
+        el.classList.add('err'); er.classList.add('on'); ok = false;
+      } else {
+        el.classList.remove('err'); er.classList.remove('on');
+      }
+    }
+
+    check('razao-social', 'err-rs', v => v.trim().length > 0);
+    check('cnpj', 'err-cnpj', v => /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/.test(v));
+    check('email', 'err-email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()));
+
+    const blocos = document.querySelectorAll('.prod-bloco');
+    const errProd = document.getElementById('err-prod');
+    if (blocos.length === 0) {
+      errProd.style.display = 'block'; ok = false;
+    } else {
+      errProd.style.display = 'none';
+      blocos.forEach(b => {
+        const sc = b.querySelector('.sel-cerv');
+        const sp = b.querySelector('.sel-prod');
+        const qi = b.querySelector('.inp-qty');
+        if (!sc.value) { sc.classList.add('err'); ok = false; } else sc.classList.remove('err');
+        if (!sp.value) { sp.classList.add('err'); ok = false; } else sp.classList.remove('err');
+        const qv = parseInt(qi.value, 10);
+        if (isNaN(qv) || qv < 1) { qi.classList.add('err'); ok = false; } else qi.classList.remove('err');
+      });
+    }
+
+    return ok;
+  }
+
+  // ─── COLETA DADOS ─────────────────────────────────────────────────────────────
+  function coletar() {
+    const produtos = [];
+    document.querySelectorAll('.prod-bloco').forEach(b => {
+      produtos.push({
+        cervejaria: b.querySelector('.sel-cerv').value,
+        produto:    b.querySelector('.sel-prod').value,
+        quantidade: parseInt(b.querySelector('.inp-qty').value, 10)
+      });
+    });
+    const totalUnidades   = produtos.reduce((s, p) => s + p.quantidade, 0);
+    const valorArrecadado = (totalUnidades * VALOR_SC_UN).toFixed(2);
+    return {
+      razaoSocial:     document.getElementById('razao-social').value.trim(),
+      cnpj:            document.getElementById('cnpj').value.trim(),
+      email:           document.getElementById('email').value.trim(),
+      produtos,
+      totalUnidades,
+      valorArrecadado
+    };
+  }
+
+  // ─── RD STATION MARKETING ─────────────────────────────────────────────────────
+  async function postMkt(d) {
+    const res = await fetch(
+      `https://api.rd.station.com/platform/conversions?api_key=${RD_MKT_TOKEN}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_type:   'pedido_campanha_brinde_solidario',
+          event_family: 'CDP',
+          payload: {
+            conversion_identifier: 'pedido_campanha_brinde_solidario',
+            email:           d.email,
+            razao_social:    d.razaoSocial,
+            cnpj:            d.cnpj,
+            produtos:        JSON.stringify(d.produtos),
+            total_unidades:  d.totalUnidades,
+            valor_arrecadado: d.valorArrecadado
+          }
+        })
+      }
+    );
+    if (!res.ok) {
+      const txt = await res.text().catch(() => res.status);
+      throw new Error(`RD Marketing (HTTP ${res.status}): ${txt}`);
+    }
+  }
+
+  // ─── RD STATION CRM ───────────────────────────────────────────────────────────
+  async function postCrm(d) {
+    const base  = 'https://crm.rdstation.com/api/v1';
+    const tk    = RD_CRM_TOKEN;
+
+    // 1. Pipelines
+    const rPipe = await fetch(`${base}/deal_pipelines?token=${tk}`);
+    if (!rPipe.ok) throw new Error(`RD CRM: erro ao buscar pipelines (HTTP ${rPipe.status})`);
+    const dataPipe = await rPipe.json();
+    const pipelines = dataPipe.deal_pipelines || dataPipe;
+    const pipeline  = pipelines.find(p => p.name === PIPELINE_NOME);
+    if (!pipeline) throw new Error(`RD CRM: pipeline "${PIPELINE_NOME}" não encontrado. Verifique o nome exato no CRM.`);
+
+    // 2. Etapas
+    const rStage = await fetch(`${base}/deal_stages?token=${tk}&deal_pipeline_id=${pipeline._id}`);
+    if (!rStage.ok) throw new Error(`RD CRM: erro ao buscar etapas (HTTP ${rStage.status})`);
+    const dataStage = await rStage.json();
+    const stages = dataStage.deal_stages || dataStage;
+    const stage  = stages.find(s => s.name === ETAPA_NOME);
+    if (!stage) throw new Error(`RD CRM: etapa "${ETAPA_NOME}" não encontrada. Verifique o nome exato no pipeline.`);
+
+    // 3. Criar card
+    const hoje = new Date();
+    const data = `${String(hoje.getDate()).padStart(2,'0')}/${String(hoje.getMonth()+1).padStart(2,'0')}/${hoje.getFullYear()}`;
+
+    const rDeal = await fetch(`${base}/deals?token=${tk}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        deal: {
+          name:             `${d.razaoSocial} - ${data}`,
+          deal_stage_id:    stage._id,
+          deal_pipeline_id: pipeline._id,
+          deal_custom_fields: [
+            { custom_field_id: CF_CNPJ,             value: d.cnpj                       },
+            { custom_field_id: CF_PRODUTOS,          value: JSON.stringify(d.produtos)   },
+            { custom_field_id: CF_TOTAL_UNIDADES,    value: String(d.totalUnidades)      },
+            { custom_field_id: CF_VALOR_ARRECADADO,  value: d.valorArrecadado            }
+          ]
+        }
+      })
+    });
+    if (!rDeal.ok) {
+      const txt = await rDeal.text().catch(() => rDeal.status);
+      throw new Error(`RD CRM: erro ao criar card (HTTP ${rDeal.status}): ${txt}`);
+    }
+  }
+
+  // ─── SUBMIT ───────────────────────────────────────────────────────────────────
+  async function onSubmit(e) {
+    e.preventDefault();
+    document.getElementById('feedback-erro').hidden = true;
+
+    if (!validar()) {
+      document.querySelector('.err')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const dados = coletar();
+    const btn   = document.getElementById('btn-submit');
+    btn.disabled = true;
+    btn.classList.add('loading');
+
+    try {
+      await Promise.all([postMkt(dados), postCrm(dados)]);
+      mostrarSucesso(dados);
+    } catch (err) {
+      console.error('[Brinde Solidário]', err);
+      let msg = err.message || 'Erro desconhecido.';
+      if (!navigator.onLine) {
+        msg = 'Sem conexão com a internet. Verifique sua rede e tente novamente.';
+      } else if (msg.toLowerCase().includes('failed to fetch') || msg.toLowerCase().includes('cors')) {
+        msg = 'Não foi possível conectar à API. Verifique se o token está correto e se a origem está autorizada nas configurações do RD Station CRM. Em alguns ambientes é necessário um proxy CORS.';
+      }
+      document.getElementById('erro-msg').textContent = msg;
+      document.getElementById('feedback-erro').hidden = false;
+      document.getElementById('feedback-erro').scrollIntoView({ behavior: 'smooth' });
+    } finally {
+      btn.disabled = false;
+      btn.classList.remove('loading');
+    }
+  }
+
+  // ─── SUCESSO ──────────────────────────────────────────────────────────────────
+  function mostrarSucesso(d) {
+    const valorFmt = Number(d.valorArrecadado).toLocaleString('pt-BR', {
+      style: 'currency', currency: 'BRL'
+    });
+    const prodsFmt = d.produtos
+      .map(p => `${p.produto} ×${p.quantidade}`)
+      .join(' / ');
+
+    const linhas = [
+      ['PDV', d.razaoSocial],
+      ['CNPJ', d.cnpj],
+      ['E-mail', d.email],
+      ['Produtos', prodsFmt],
+      ['Total de unidades', String(d.totalUnidades)]
+    ];
+
+    document.getElementById('suc-itens').innerHTML = linhas
+      .map(([l, v]) => `<div class="suc-linha"><span class="suc-lbl">${l}</span><span class="suc-val">${v}</span></div>`)
+      .join('');
+
+    document.getElementById('suc-valor-sc').textContent = valorFmt;
+    document.getElementById('form-brinde').hidden = true;
+    document.getElementById('feedback-sucesso').hidden = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ─── RESET ────────────────────────────────────────────────────────────────────
+  function resetarForm() {
+    ['razao-social', 'cnpj', 'email'].forEach(id => {
+      const el = document.getElementById(id);
+      el.value = '';
+      el.classList.remove('err');
+    });
+    document.querySelectorAll('.field-err').forEach(e => e.classList.remove('on'));
+    document.getElementById('prod-container').innerHTML = '';
+    blocoSeq = 0;
+    adicionarBloco();
+    recalc();
+    document.getElementById('feedback-sucesso').hidden = true;
+    document.getElementById('feedback-erro').hidden   = true;
+    document.getElementById('form-brinde').hidden     = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
