@@ -592,6 +592,7 @@
   const CF_TOTAL_UNIDADES   = 'CF_ID_TOTAL_UNIDADES_AQUI';
   const CF_VALOR_ARRECADADO = 'CF_ID_VALOR_ARRECADADO_AQUI';
 
+  const WEBHOOK_URL   = 'https://script.google.com/macros/s/AKfycbyKGw7Xyokp1UrzXbH1LHaTF_ZFVzHkn5tX43t3kjH0MTL7Q_n9mvfnMouVFmQotF5C/exec';
   const VALOR_SC_UN   = 0.50;
   const PIPELINE_NOME = 'Campanha Brinde Solidário';
   const ETAPA_NOME    = 'Pedido Registrado';
@@ -764,80 +765,17 @@
     };
   }
 
-  // ─── RD STATION MARKETING ─────────────────────────────────────────────────────
-  async function postMkt(d) {
-    const res = await fetch(
-      `https://api.rd.station.com/platform/conversions?api_key=${RD_MKT_TOKEN}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          event_type:   'pedido_campanha_brinde_solidario',
-          event_family: 'CDP',
-          payload: {
-            conversion_identifier: 'pedido_campanha_brinde_solidario',
-            email:           d.email,
-            razao_social:    d.razaoSocial,
-            cnpj:            d.cnpj,
-            produtos:        JSON.stringify(d.produtos),
-            total_unidades:  d.totalUnidades,
-            valor_arrecadado: d.valorArrecadado
-          }
-        })
-      }
-    );
-    if (!res.ok) {
-      const txt = await res.text().catch(() => res.status);
-      throw new Error(`RD Marketing (HTTP ${res.status}): ${txt}`);
-    }
-  }
-
-  // ─── RD STATION CRM ───────────────────────────────────────────────────────────
-  async function postCrm(d) {
-    const base  = 'https://crm.rdstation.com/api/v1';
-    const tk    = RD_CRM_TOKEN;
-
-    // 1. Pipelines
-    const rPipe = await fetch(`${base}/deal_pipelines?token=${tk}`);
-    if (!rPipe.ok) throw new Error(`RD CRM: erro ao buscar pipelines (HTTP ${rPipe.status})`);
-    const dataPipe = await rPipe.json();
-    const pipelines = dataPipe.deal_pipelines || dataPipe;
-    const pipeline  = pipelines.find(p => p.name === PIPELINE_NOME);
-    if (!pipeline) throw new Error(`RD CRM: pipeline "${PIPELINE_NOME}" não encontrado. Verifique o nome exato no CRM.`);
-
-    // 2. Etapas
-    const rStage = await fetch(`${base}/deal_stages?token=${tk}&deal_pipeline_id=${pipeline._id}`);
-    if (!rStage.ok) throw new Error(`RD CRM: erro ao buscar etapas (HTTP ${rStage.status})`);
-    const dataStage = await rStage.json();
-    const stages = dataStage.deal_stages || dataStage;
-    const stage  = stages.find(s => s.name === ETAPA_NOME);
-    if (!stage) throw new Error(`RD CRM: etapa "${ETAPA_NOME}" não encontrada. Verifique o nome exato no pipeline.`);
-
-    // 3. Criar card
-    const hoje = new Date();
-    const data = `${String(hoje.getDate()).padStart(2,'0')}/${String(hoje.getMonth()+1).padStart(2,'0')}/${hoje.getFullYear()}`;
-
-    const rDeal = await fetch(`${base}/deals?token=${tk}`, {
+  // ─── WEBHOOK (Google Apps Script — proxy sem CORS) ────────────────────────────
+  async function enviarViaWebhook(d) {
+    const res = await fetch(WEBHOOK_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        deal: {
-          name:             `${d.razaoSocial} - ${data}`,
-          deal_stage_id:    stage._id,
-          deal_pipeline_id: pipeline._id,
-          deal_custom_fields: [
-            { custom_field_id: CF_CNPJ,             value: d.cnpj                       },
-            { custom_field_id: CF_PRODUTOS,          value: JSON.stringify(d.produtos)   },
-            { custom_field_id: CF_TOTAL_UNIDADES,    value: String(d.totalUnidades)      },
-            { custom_field_id: CF_VALOR_ARRECADADO,  value: d.valorArrecadado            }
-          ]
-        }
-      })
+      headers: { 'Content-Type': 'text/plain' }, // Apps Script exige text/plain para evitar preflight
+      body: JSON.stringify(d)
     });
-    if (!rDeal.ok) {
-      const txt = await rDeal.text().catch(() => rDeal.status);
-      throw new Error(`RD CRM: erro ao criar card (HTTP ${rDeal.status}): ${txt}`);
-    }
+    if (!res.ok) throw new Error(`Webhook HTTP ${res.status}`);
+    const json = await res.json();
+    if (json.erro) throw new Error(json.erro);
+    return json;
   }
 
   // ─── SUBMIT ───────────────────────────────────────────────────────────────────
@@ -855,45 +793,18 @@
     btn.disabled = true;
     btn.classList.add('loading');
 
-    // Chama cada integração de forma independente para diagnóstico preciso
-    let mktOk = false, crmOk = false;
-    let mktErr = '', crmErr = '';
-
-    try { await postMkt(dados); mktOk = true; }
-    catch (err) {
-      console.error('[RD Marketing]', err);
-      mktErr = err.message || 'Erro desconhecido';
-      if (mktErr.toLowerCase().includes('failed to fetch')) mktErr = 'Failed to fetch (possível CORS ou token inválido)';
-    }
-
-    try { await postCrm(dados); crmOk = true; }
-    catch (err) {
-      console.error('[RD CRM]', err);
-      crmErr = err.message || 'Erro desconhecido';
-      if (crmErr.toLowerCase().includes('failed to fetch')) crmErr = 'Failed to fetch (possível CORS ou token inválido)';
-    }
-
-    btn.disabled = false;
-    btn.classList.remove('loading');
-
-    if (mktOk && crmOk) {
+    try {
+      const resultado = await enviarViaWebhook(dados);
+      console.log('[Brinde Solidário] resultado:', resultado);
       mostrarSucesso(dados);
-      return;
-    }
-
-    // Monta diagnóstico detalhado
-    const linhas = [
-      `RD Station Marketing: ${mktOk ? '✓ enviado com sucesso' : '✗ ' + mktErr}`,
-      `RD Station CRM:       ${crmOk ? '✓ card criado'        : '✗ ' + crmErr}`
-    ].join('\n');
-
-    document.getElementById('erro-msg').innerText = linhas;
-    document.getElementById('feedback-erro').hidden = false;
-    document.getElementById('feedback-erro').scrollIntoView({ behavior: 'smooth' });
-
-    // Se pelo menos o Marketing passou, mostra aviso mas não bloqueia
-    if (mktOk) {
-      mostrarSucesso(dados, true);
+    } catch (err) {
+      console.error('[Brinde Solidário]', err);
+      document.getElementById('erro-msg').textContent = err.message || 'Erro desconhecido.';
+      document.getElementById('feedback-erro').hidden = false;
+      document.getElementById('feedback-erro').scrollIntoView({ behavior: 'smooth' });
+    } finally {
+      btn.disabled = false;
+      btn.classList.remove('loading');
     }
   }
 
