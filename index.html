@@ -156,12 +156,6 @@
       appearance: none;
       -webkit-appearance: none;
     }
-    select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C8941A' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 13px center;
-      padding-right: 34px;
-    }
     input:focus, select:focus {
       border-color: var(--gold-dk);
       box-shadow: 0 0 0 3px rgba(200,148,26,.13);
@@ -179,81 +173,51 @@
     }
     .field-err.on { display: block; }
 
-    /* ── BLOCO DE PRODUTO ── */
-    .prod-bloco {
-      background: #FAF5EE;
-      border: 1.5px solid #E8D9C4;
-      border-radius: 8px;
-      padding: 18px 20px 16px;
-      margin-bottom: 12px;
-    }
-    .prod-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-    .prod-num {
+    /* ── GRADE DE PRODUTOS ── */
+    .marca-section { margin-bottom: 24px; }
+    .marca-section:last-child { margin-bottom: 0; }
+
+    .marca-header {
       font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700;
-      font-size: 12px;
-      letter-spacing: 1.5px;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
       color: var(--brown-mid);
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--gold-dk);
+      margin-bottom: 4px;
     }
-    .btn-rem {
-      background: none;
-      border: 1px solid #DDD0C0;
-      border-radius: 5px;
-      padding: 4px 11px;
-      font-size: 12px;
-      font-weight: 600;
-      font-family: 'Barlow', sans-serif;
-      color: #999;
-      cursor: pointer;
-      transition: all .18s;
-    }
-    .btn-rem:hover { border-color: var(--red); color: var(--red); background: rgba(201,43,30,.05); }
-    .prod-bloco:first-child .btn-rem { display: none; }
 
-    .prod-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 90px;
-      gap: 12px;
-      align-items: end;
-    }
-    @media (max-width: 560px) {
-      .prod-grid { grid-template-columns: 1fr 1fr; }
-      .prod-grid .field:last-child { grid-column: 1 / -1; }
-    }
-    @media (max-width: 380px) { .prod-grid { grid-template-columns: 1fr; } }
-
-    /* ── BTN ADICIONAR ── */
-    .btn-add {
+    .prod-row {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      background: none;
-      border: 1.5px dashed var(--gold-dk);
-      border-radius: 8px;
-      padding: 13px 20px;
-      color: var(--gold-dk);
-      font-family: 'Barlow', sans-serif;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all .18s;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 4px;
+      border-bottom: 1px solid rgba(200,148,26,.12);
     }
-    .btn-add:hover { background: rgba(200,148,26,.07); border-color: var(--gold-lt); color: var(--gold-lt); }
+    .prod-row:last-child { border-bottom: none; }
+
+    .prod-nome {
+      font-size: 15px;
+      color: var(--brown);
+      flex: 1;
+    }
+
+    .prod-row .inp-qty {
+      width: 90px;
+      flex-shrink: 0;
+      text-align: center;
+      padding: 9px 10px;
+    }
 
     .err-prod {
       display: none;
       font-size: 12px;
       color: var(--red);
       font-weight: 500;
-      margin-top: 8px;
+      margin-top: 12px;
     }
 
     /* ── TOTAIS ── */
@@ -515,14 +479,7 @@
       </div>
       <div class="card-body">
         <div id="prod-container"></div>
-        <button type="button" class="btn-add" id="btn-add">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.6"/>
-            <path d="M8 5v6M5 8h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-          </svg>
-          Adicionar produto
-        </button>
-        <p class="err-prod" id="err-prod">Adicione ao menos um produto.</p>
+        <p class="err-prod" id="err-prod">Informe a quantidade de ao menos um produto.</p>
       </div>
     </div>
 
@@ -558,7 +515,7 @@
     <div class="suc-header">
       <div class="suc-icon" aria-hidden="true">✓</div>
       <h2>Pedido Registrado!</h2>
-      <p id="suc-header-msg">Os dados foram enviados com sucesso.</p>
+      <p>Os dados foram enviados com sucesso.</p>
     </div>
     <div class="suc-body">
       <div class="suc-resumo">
@@ -579,42 +536,56 @@
 <footer>Campanha Brinde Solidário &mdash; Cervejaria Germânia &copy; 2026</footer>
 
 <script>
-  // ─── CONFIGURAÇÃO ─────────────────────────────────────────────────────────────
-  // ⚠️ Inserir tokens antes de publicar no GitHub Pages
-  const RD_MKT_TOKEN = '89f5be574f4bf822d7c4a54e042ff491';
-  const RD_CRM_TOKEN = '694a7f59c0e19c0013e40ac2';
+  const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyKGw7Xyokp1UrzXbH1LHaTF_ZFVzHkn5tX43t3kjH0MTL7Q_n9mvfnMouVFmQotF5C/exec';
+  const VALOR_SC_UN = 0.50;
 
-  // IDs dos campos customizados no RD CRM
-  // Para descobrir: GET https://crm.rdstation.com/api/v1/custom_fields?token=SEU_TOKEN
-  // Substitua os placeholders abaixo pelos _id retornados pela API:
-  const CF_CNPJ             = 'CF_ID_CNPJ_AQUI';
-  const CF_PRODUTOS         = 'CF_ID_PRODUTOS_AQUI';
-  const CF_TOTAL_UNIDADES   = 'CF_ID_TOTAL_UNIDADES_AQUI';
-  const CF_VALOR_ARRECADADO = 'CF_ID_VALOR_ARRECADADO_AQUI';
-
-  const WEBHOOK_URL   = 'https://script.google.com/macros/s/AKfycbyKGw7Xyokp1UrzXbH1LHaTF_ZFVzHkn5tX43t3kjH0MTL7Q_n9mvfnMouVFmQotF5C/exec';
-  const VALOR_SC_UN   = 0.50;
-  const PIPELINE_NOME = 'Campanha Brinde Solidário';
-  const ETAPA_NOME    = 'Pedido Registrado';
-
-  // ─── CATÁLOGO ─────────────────────────────────────────────────────────────────
-  const CATALOGO = {
-    'Germania': ['Germânia Pilsen', 'Germânia Vinhedo', 'Germânia Escuro'],
-    'Nineties': ['[PLACEHOLDER — a definir]'],
-    'Pangea':   ['[PLACEHOLDER — a definir]']
-  };
-
-  // ─── ESTADO ───────────────────────────────────────────────────────────────────
-  let blocoSeq = 0;
+  const CATALOGO = [
+    {
+      fornecedor: 'Germânia',
+      key: 'Germania',
+      estilos: ['Pilsen', 'Vinhedo', 'Escuro']
+    },
+    {
+      fornecedor: 'Nineties Beer',
+      key: 'Nineties',
+      estilos: ['[PLACEHOLDER]']
+    },
+    {
+      fornecedor: 'Pangea',
+      key: 'Pangea',
+      estilos: ['[PLACEHOLDER]']
+    }
+  ];
 
   // ─── BOOT ─────────────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
-    adicionarBloco();
-    document.getElementById('btn-add').addEventListener('click', adicionarBloco);
+    gerarGrade();
     document.getElementById('form-brinde').addEventListener('submit', onSubmit);
     document.getElementById('btn-novo').addEventListener('click', resetarForm);
     document.getElementById('cnpj').addEventListener('input', mascaraCNPJ);
   });
+
+  // ─── GRADE DE PRODUTOS ────────────────────────────────────────────────────────
+  function gerarGrade() {
+    const container = document.getElementById('prod-container');
+    CATALOGO.forEach(marca => {
+      const section = document.createElement('div');
+      section.className = 'marca-section';
+      section.innerHTML = `<div class="marca-header">${marca.fornecedor}</div>`;
+      marca.estilos.forEach(estilo => {
+        const row = document.createElement('div');
+        row.className = 'prod-row';
+        row.dataset.fornecedor = marca.key;
+        row.dataset.estilo = estilo;
+        row.innerHTML = `
+          <span class="prod-nome">${estilo}</span>
+          <input type="number" class="inp-qty" min="0" placeholder="0" oninput="recalc()">
+        `;
+        section.appendChild(row);
+      });
+      container.appendChild(section);
+    });
+  }
 
   // ─── MÁSCARA CNPJ ─────────────────────────────────────────────────────────────
   function mascaraCNPJ(e) {
@@ -624,73 +595,6 @@
     else if (d.length > 5)  d = d.replace(/^(\d{2})(\d{3})(\d{0,3})/,               '$1.$2.$3');
     else if (d.length > 2)  d = d.replace(/^(\d{2})(\d{0,3})/,                       '$1.$2');
     e.target.value = d;
-  }
-
-  // ─── BLOCOS DE PRODUTO ────────────────────────────────────────────────────────
-  function adicionarBloco() {
-    blocoSeq++;
-    const container = document.getElementById('prod-container');
-    const n = blocoSeq;
-
-    const div = document.createElement('div');
-    div.className = 'prod-bloco';
-    div.innerHTML = `
-      <div class="prod-top">
-        <span class="prod-num">Produto 1</span>
-        <button type="button" class="btn-rem" onclick="removerBloco(this)">Remover</button>
-      </div>
-      <div class="prod-grid">
-        <div class="field">
-          <label>Cervejaria <span class="req">*</span></label>
-          <select class="sel-cerv" onchange="atualizarProdutos(this)">
-            <option value="">Selecione…</option>
-            <option value="Germania">Germânia</option>
-            <option value="Nineties">Nineties Beer</option>
-            <option value="Pangea">Pangea</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Produto <span class="req">*</span></label>
-          <select class="sel-prod" disabled>
-            <option value="">Selecione a cervejaria</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Qtd. <span class="req">*</span></label>
-          <input type="number" class="inp-qty" min="1" placeholder="0" oninput="recalc()">
-        </div>
-      </div>
-    `;
-    container.appendChild(div);
-    renumerar();
-  }
-
-  function removerBloco(btn) {
-    const container = document.getElementById('prod-container');
-    if (container.children.length <= 1) return;
-    btn.closest('.prod-bloco').remove();
-    renumerar();
-    recalc();
-  }
-
-  function renumerar() {
-    document.querySelectorAll('.prod-bloco .prod-num').forEach((el, i) => {
-      el.textContent = `Produto ${i + 1}`;
-    });
-  }
-
-  function atualizarProdutos(sel) {
-    const bloco = sel.closest('.prod-bloco');
-    const selProd = bloco.querySelector('.sel-prod');
-    const cerv = sel.value;
-
-    selProd.innerHTML = cerv && CATALOGO[cerv]
-      ? '<option value="">Selecione…</option>' + CATALOGO[cerv].map(p => `<option value="${p}">${p}</option>`).join('')
-      : '<option value="">Selecione a cervejaria</option>';
-
-    selProd.disabled = !cerv;
-    sel.classList.remove('err');
-    selProd.classList.remove('err');
   }
 
   // ─── TOTAIS ───────────────────────────────────────────────────────────────────
@@ -719,25 +623,17 @@
       }
     }
 
-    check('razao-social', 'err-rs', v => v.trim().length > 0);
-    check('cnpj', 'err-cnpj', v => /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/.test(v));
-    check('email', 'err-email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()));
+    check('razao-social', 'err-rs',    v => v.trim().length > 0);
+    check('cnpj',         'err-cnpj',  v => /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/.test(v));
+    check('email',        'err-email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()));
 
-    const blocos = document.querySelectorAll('.prod-bloco');
+    const algumProd = Array.from(document.querySelectorAll('.inp-qty'))
+      .some(inp => parseInt(inp.value, 10) > 0);
     const errProd = document.getElementById('err-prod');
-    if (blocos.length === 0) {
+    if (!algumProd) {
       errProd.style.display = 'block'; ok = false;
     } else {
       errProd.style.display = 'none';
-      blocos.forEach(b => {
-        const sc = b.querySelector('.sel-cerv');
-        const sp = b.querySelector('.sel-prod');
-        const qi = b.querySelector('.inp-qty');
-        if (!sc.value) { sc.classList.add('err'); ok = false; } else sc.classList.remove('err');
-        if (!sp.value) { sp.classList.add('err'); ok = false; } else sp.classList.remove('err');
-        const qv = parseInt(qi.value, 10);
-        if (isNaN(qv) || qv < 1) { qi.classList.add('err'); ok = false; } else qi.classList.remove('err');
-      });
     }
 
     return ok;
@@ -746,12 +642,15 @@
   // ─── COLETA DADOS ─────────────────────────────────────────────────────────────
   function coletar() {
     const produtos = [];
-    document.querySelectorAll('.prod-bloco').forEach(b => {
-      produtos.push({
-        cervejaria: b.querySelector('.sel-cerv').value,
-        produto:    b.querySelector('.sel-prod').value,
-        quantidade: parseInt(b.querySelector('.inp-qty').value, 10)
-      });
+    document.querySelectorAll('.prod-row').forEach(row => {
+      const qty = parseInt(row.querySelector('.inp-qty').value, 10);
+      if (qty > 0) {
+        produtos.push({
+          cervejaria: row.dataset.fornecedor,
+          produto:    row.dataset.estilo,
+          quantidade: qty
+        });
+      }
     });
     const totalUnidades   = produtos.reduce((s, p) => s + p.quantidade, 0);
     const valorArrecadado = (totalUnidades * VALOR_SC_UN).toFixed(2);
@@ -765,11 +664,11 @@
     };
   }
 
-  // ─── WEBHOOK (Google Apps Script — proxy sem CORS) ────────────────────────────
+  // ─── WEBHOOK ──────────────────────────────────────────────────────────────────
   async function enviarViaWebhook(d) {
     const res = await fetch(WEBHOOK_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'text/plain' }, // Apps Script exige text/plain para evitar preflight
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(d)
     });
     if (!res.ok) throw new Error(`Webhook HTTP ${res.status}`);
@@ -784,7 +683,8 @@
     document.getElementById('feedback-erro').hidden = true;
 
     if (!validar()) {
-      document.querySelector('.err')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      document.querySelector('.err, .err-prod[style*="block"]')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
@@ -794,11 +694,9 @@
     btn.classList.add('loading');
 
     try {
-      const resultado = await enviarViaWebhook(dados);
-      console.log('[Brinde Solidário] resultado:', resultado);
+      await enviarViaWebhook(dados);
       mostrarSucesso(dados);
     } catch (err) {
-      console.error('[Brinde Solidário]', err);
       document.getElementById('erro-msg').textContent = err.message || 'Erro desconhecido.';
       document.getElementById('feedback-erro').hidden = false;
       document.getElementById('feedback-erro').scrollIntoView({ behavior: 'smooth' });
@@ -809,19 +707,16 @@
   }
 
   // ─── SUCESSO ──────────────────────────────────────────────────────────────────
-  function mostrarSucesso(d, parcial = false) {
+  function mostrarSucesso(d) {
     const valorFmt = Number(d.valorArrecadado).toLocaleString('pt-BR', {
       style: 'currency', currency: 'BRL'
     });
-    const prodsFmt = d.produtos
-      .map(p => `${p.produto} ×${p.quantidade}`)
-      .join(' / ');
 
     const linhas = [
-      ['PDV', d.razaoSocial],
-      ['CNPJ', d.cnpj],
+      ['PDV',    d.razaoSocial],
+      ['CNPJ',   d.cnpj],
       ['E-mail', d.email],
-      ['Produtos', prodsFmt],
+      ...d.produtos.map(p => [p.produto, `${p.quantidade} un`]),
       ['Total de unidades', String(d.totalUnidades)]
     ];
 
@@ -830,10 +725,7 @@
       .join('');
 
     document.getElementById('suc-valor-sc').textContent = valorFmt;
-    document.getElementById('suc-header-msg').textContent = parcial
-      ? 'Marketing registrado. Veja o diagnóstico abaixo para o CRM.'
-      : 'Os dados foram enviados com sucesso.';
-    document.getElementById('form-brinde').hidden = true;
+    document.getElementById('form-brinde').hidden      = true;
     document.getElementById('feedback-sucesso').hidden = false;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -846,13 +738,14 @@
       el.classList.remove('err');
     });
     document.querySelectorAll('.field-err').forEach(e => e.classList.remove('on'));
-    document.getElementById('prod-container').innerHTML = '';
-    blocoSeq = 0;
-    adicionarBloco();
+    document.querySelectorAll('.inp-qty').forEach(inp => {
+      inp.value = '';
+      inp.classList.remove('err');
+    });
     recalc();
     document.getElementById('feedback-sucesso').hidden = true;
-    document.getElementById('feedback-erro').hidden   = true;
-    document.getElementById('form-brinde').hidden     = false;
+    document.getElementById('feedback-erro').hidden    = true;
+    document.getElementById('form-brinde').hidden      = false;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 </script>
