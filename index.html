@@ -38,7 +38,7 @@
       content: '';
       display: block;
       height: 4px;
-      background: linear-gradient(90deg, var(--amber), var(--amber-lt), var(--amber));
+      background: linear-gradient(90deg, var(--dark), rgba(26,18,8,.4), var(--dark));
       position: absolute;
       bottom: 0; left: 0; right: 0;
     }
@@ -123,6 +123,88 @@
     }
     .card-body { padding: 24px; }
 
+    /* ── SPLASH ── */
+    .splash-body {
+      padding: 28px 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 480px) { .splash-body { grid-template-columns: 1fr; } }
+
+    .splash-card {
+      border: 2px solid #E8D9C4;
+      border-radius: 10px;
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      background: #FDFAF5;
+      font-family: 'Barlow', sans-serif;
+      width: 100%;
+    }
+    .splash-card:hover {
+      border-color: var(--amber);
+      background: rgba(232,146,26,.06);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(232,146,26,.2);
+    }
+    .splash-icon {
+      font-size: 40px;
+      margin-bottom: 14px;
+      display: block;
+    }
+    .splash-card h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+    .splash-card p {
+      font-size: 13px;
+      color: var(--dark-mid);
+      line-height: 1.5;
+    }
+
+    /* ── TIPO BADGE ── */
+    .tipo-badge {
+      background: var(--dark);
+      border-radius: 8px;
+      padding: 12px 18px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .tipo-badge-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.6);
+    }
+    .tipo-badge-label strong {
+      color: var(--amber-lt);
+      margin-left: 6px;
+    }
+    .btn-trocar {
+      background: none;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 4px;
+      padding: 4px 12px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,.6);
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .btn-trocar:hover { border-color: var(--amber-lt); color: var(--amber-lt); }
+
     /* ── CAMPOS ── */
     .field { margin-bottom: 18px; }
     .field:last-child { margin-bottom: 0; }
@@ -162,9 +244,15 @@
       appearance: none;
       -webkit-appearance: none;
     }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C8941A' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 13px center;
+      padding-right: 34px;
+    }
     input:focus, select:focus {
       border-color: var(--amber);
-      box-shadow: 0 0 0 3px rgba(200,148,26,.13);
+      box-shadow: 0 0 0 3px rgba(232,146,26,.13);
     }
     input.err, select.err {
       border-color: var(--red);
@@ -246,7 +334,7 @@
       cursor: pointer;
       transition: all .18s;
     }
-    .btn-add:hover { background: rgba(200,148,26,.07); border-color: var(--amber-lt); color: var(--amber-lt); }
+    .btn-add:hover { background: rgba(232,146,26,.07); border-color: var(--amber-lt); color: var(--amber-lt); }
 
     .err-prod {
       display: none;
@@ -317,8 +405,8 @@
     .spinner {
       display: none;
       width: 20px; height: 20px;
-      border: 2.5px solid rgba(255,255,255,.35);
-      border-top-color: #fff;
+      border: 2.5px solid rgba(26,18,8,.25);
+      border-top-color: var(--dark);
       border-radius: 50%;
       animation: spin .7s linear infinite;
       margin: 0 auto;
@@ -377,9 +465,7 @@
       color: #fff;
     }
     .suc-header p { font-size: 14px; color: rgba(255,255,255,.75); margin-top: 4px; }
-
     .suc-body { padding: 28px 24px; }
-
     .suc-resumo {
       background: var(--cream);
       border-radius: 8px;
@@ -407,7 +493,6 @@
     .suc-linha:last-child { border-bottom: none; padding-bottom: 0; }
     .suc-lbl { color: var(--dark-mid); flex-shrink: 0; }
     .suc-val { font-weight: 600; color: var(--dark); text-align: right; word-break: break-word; }
-
     .sc-box {
       background: var(--dark);
       border-radius: 8px;
@@ -431,7 +516,6 @@
       line-height: 1;
     }
     .sc-sub { font-size: 12px; color: rgba(255,255,255,.55); margin-top: 5px; }
-
     .btn-novo {
       display: block;
       width: 100%;
@@ -465,7 +549,7 @@
 <header class="site-header">
   <p class="header-marca">Germânia &middot; Nineties Beer &middot; Pangea</p>
   <h1 class="header-title">Solidariedade em <span>Cada Brinde</span></h1>
-  <p class="header-sub">Registro de Pedidos — PDV Parceiro</p>
+  <p class="header-sub">Registro de Pedidos — Campanha Solidária</p>
   <span class="header-badge">R$ 0,50 por unidade &rarr; Santa Casa de Vinhedo</span>
 </header>
 
@@ -477,30 +561,58 @@
     <p id="erro-msg"></p>
   </div>
 
-  <!-- FORMULÁRIO -->
-  <form id="form-brinde" novalidate>
-
-    <!-- IDENTIFICAÇÃO DO PDV -->
+  <!-- SPLASH: SELEÇÃO DE TIPO -->
+  <div id="splash">
     <div class="card">
       <div class="card-header">
         <div class="card-dot"></div>
-        <h2>Identificação do PDV</h2>
+        <h2>Como deseja registrar?</h2>
+      </div>
+      <div class="splash-body">
+        <button type="button" class="splash-card" id="btn-pdv">
+          <span class="splash-icon">🏪</span>
+          <h3>Sou PDV</h3>
+          <p>Estabelecimento parceiro que comercializa os produtos da campanha</p>
+        </button>
+        <button type="button" class="splash-card" id="btn-consumidor">
+          <span class="splash-icon">🍺</span>
+          <h3>Sou Consumidor</h3>
+          <p>Consumidor final que adquiriu produtos participantes da campanha</p>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BADGE DE TIPO -->
+  <div id="tipo-badge" class="tipo-badge" hidden>
+    <span class="tipo-badge-label">Registrando como <strong id="tipo-label"></strong></span>
+    <button type="button" class="btn-trocar" id="btn-trocar">Trocar</button>
+  </div>
+
+  <!-- FORMULÁRIO -->
+  <form id="form-brinde" novalidate hidden>
+
+    <!-- IDENTIFICAÇÃO -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-dot"></div>
+        <h2>Identificação</h2>
       </div>
       <div class="card-body">
         <div class="field">
-          <label for="razao-social">Razão Social <span class="req">*</span></label>
-          <input type="text" id="razao-social" placeholder="Ex.: Distribuidora Exemplo Ltda.">
+          <label for="razao-social">Razão Social / Nome <span class="req">*</span></label>
+          <input type="text" id="razao-social" placeholder="Ex.: Bar do João ou João Silva">
           <span class="field-err" id="err-rs">Campo obrigatório.</span>
         </div>
         <div class="row-2">
           <div class="field">
-            <label for="cnpj">CNPJ <span class="req">*</span></label>
+            <label for="cnpj">CNPJ / CPF <span class="req">*</span></label>
             <input type="text" id="cnpj" placeholder="00.000.000/0000-00" maxlength="18" inputmode="numeric">
-            <span class="field-err" id="err-cnpj">CNPJ inválido.</span>
+            <span class="field-err" id="err-cnpj">Documento inválido.</span>
           </div>
           <div class="field">
-            <label for="email">E-mail do responsável <span class="req">*</span></label>
-            <input type="email" id="email" placeholder="contato@pdv.com.br">
+            <label for="email">E-mail <span class="req">*</span></label>
+            <input type="email" id="email" placeholder="contato@exemplo.com.br">
             <span class="field-err" id="err-email">E-mail inválido.</span>
           </div>
         </div>
@@ -583,27 +695,109 @@
   const VALOR_SC_UN = 0.50;
 
   const CATALOGO = {
-    'Germania':  { label: 'Germânia',     estilos: ['Pilsen', 'Vinhedo', 'Escuro', 'IPA'] },
-    'Nineties':  { label: 'Nineties Beer', estilos: ['[PLACEHOLDER]'] },
-    'Pangea':    { label: 'Pangea',        estilos: ['[PLACEHOLDER]'] }
+    pdv: {
+      Germania: { label: 'Germânia', estilos: [
+        { nome: 'Pilsen',   preco: 12.50 },
+        { nome: 'Vinhedo',  preco: 13.70 },
+        { nome: 'Escuro',   preco: 12.81 },
+        { nome: 'IPA',      preco: 20.50 }
+      ]},
+      Nineties: { label: 'Nineties Bier', estilos: [
+        { nome: 'Pilsen',     preco: 13.20 },
+        { nome: 'IPA',        preco: 21.00 },
+        { nome: 'Sem Álcool', preco: 15.70 }
+      ]},
+      Pangea: { label: 'Pangea', estilos: [
+        { nome: 'Pilsen',      preco: 16.90 },
+        { nome: 'Session IPA', preco: 19.90 },
+        { nome: 'Dry Stout',   preco: 19.90 }
+      ]}
+    },
+    consumidor: {
+      Germania: { label: 'Germânia', estilos: [
+        { nome: 'Pilsen',  preco: 17.99 },
+        { nome: 'Vinhedo', preco: 18.99 },
+        { nome: 'Escuro',  preco: 18.50 },
+        { nome: 'IPA',     preco: 26.99 }
+      ]},
+      Nineties: { label: 'Nineties Bier', estilos: [
+        { nome: 'Pilsen',     preco: 19.00 },
+        { nome: 'IPA',        preco: 28.00 },
+        { nome: 'Sem Álcool', preco: 24.00 }
+      ]},
+      Pangea: { label: 'Pangea', estilos: [
+        { nome: 'Pilsen',      preco: 24.00 },
+        { nome: 'Session IPA', preco: 32.00 },
+        { nome: 'Dry Stout',   preco: 32.00 }
+      ]}
+    }
   };
 
-  let blocoSeq = 0;
+  let tipoAtual = null;
+  let blocoSeq  = 0;
 
   // ─── BOOT ─────────────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
-    adicionarBloco();
+    document.getElementById('btn-pdv').addEventListener('click', () => selecionarTipo('pdv'));
+    document.getElementById('btn-consumidor').addEventListener('click', () => selecionarTipo('consumidor'));
+    document.getElementById('btn-trocar').addEventListener('click', voltarSplash);
     document.getElementById('btn-add').addEventListener('click', adicionarBloco);
     document.getElementById('form-brinde').addEventListener('submit', onSubmit);
-    document.getElementById('btn-novo').addEventListener('click', resetarForm);
-    document.getElementById('cnpj').addEventListener('input', mascaraCNPJ);
+    document.getElementById('btn-novo').addEventListener('click', novoRegistro);
+    document.getElementById('cnpj').addEventListener('input', mascaraDocumento);
   });
+
+  // ─── SPLASH ───────────────────────────────────────────────────────────────────
+  function selecionarTipo(tipo) {
+    tipoAtual = tipo;
+    const labels = { pdv: 'PDV', consumidor: 'Consumidor' };
+    document.getElementById('tipo-label').textContent = labels[tipo];
+    document.getElementById('splash').hidden      = true;
+    document.getElementById('tipo-badge').hidden  = false;
+    document.getElementById('form-brinde').hidden = false;
+    document.getElementById('prod-container').innerHTML = '';
+    blocoSeq = 0;
+    adicionarBloco();
+    recalc();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function voltarSplash() {
+    tipoAtual = null;
+    document.getElementById('splash').hidden      = false;
+    document.getElementById('tipo-badge').hidden  = true;
+    document.getElementById('form-brinde').hidden = true;
+    document.getElementById('feedback-erro').hidden = true;
+    limparForm();
+  }
+
+  function limparForm() {
+    ['razao-social', 'cnpj', 'email'].forEach(id => {
+      const el = document.getElementById(id);
+      el.value = '';
+      el.classList.remove('err');
+    });
+    document.querySelectorAll('.field-err').forEach(e => e.classList.remove('on'));
+    document.getElementById('prod-container').innerHTML = '';
+    blocoSeq = 0;
+    recalc();
+  }
+
+  // ─── MÁSCARA DOCUMENTO ────────────────────────────────────────────────────────
+  function mascaraDocumento(e) {
+    let d = e.target.value.replace(/\D/g, '').slice(0, 14);
+    if (d.length > 12)      d = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, '$1.$2.$3/$4-$5');
+    else if (d.length > 8)  d = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4})/,        '$1.$2.$3/$4');
+    else if (d.length > 5)  d = d.replace(/^(\d{2})(\d{3})(\d{0,3})/,               '$1.$2.$3');
+    else if (d.length > 2)  d = d.replace(/^(\d{2})(\d{0,3})/,                       '$1.$2');
+    e.target.value = d;
+  }
 
   // ─── BLOCOS DE PRODUTO ────────────────────────────────────────────────────────
   function adicionarBloco() {
     blocoSeq++;
     const container = document.getElementById('prod-container');
-    const opcoesForncedor = Object.entries(CATALOGO)
+    const opcoesForn = Object.entries(CATALOGO[tipoAtual])
       .map(([key, m]) => `<option value="${key}">${m.label}</option>`)
       .join('');
 
@@ -619,7 +813,7 @@
           <label>Fornecedor <span class="req">*</span></label>
           <select class="sel-forn" onchange="atualizarEstilos(this)">
             <option value="">Selecione…</option>
-            ${opcoesForncedor}
+            ${opcoesForn}
           </select>
         </div>
         <div class="field">
@@ -653,28 +847,20 @@
   }
 
   function atualizarEstilos(sel) {
-    const bloco    = sel.closest('.prod-bloco');
+    const bloco     = sel.closest('.prod-bloco');
     const selEstilo = bloco.querySelector('.sel-estilo');
-    const key      = sel.value;
-    const marca    = CATALOGO[key];
+    const key       = sel.value;
+    const marca     = CATALOGO[tipoAtual][key];
 
     selEstilo.innerHTML = marca
-      ? '<option value="">Selecione…</option>' + marca.estilos.map(e => `<option value="${e}">${e}</option>`).join('')
+      ? '<option value="">Selecione…</option>' + marca.estilos.map(e =>
+          `<option value="${e.nome}" data-preco="${e.preco}">${e.nome} — R$ ${e.preco.toFixed(2).replace('.', ',')}</option>`
+        ).join('')
       : '<option value="">Selecione o fornecedor</option>';
 
     selEstilo.disabled = !key;
     sel.classList.remove('err');
     selEstilo.classList.remove('err');
-  }
-
-  // ─── MÁSCARA CNPJ ─────────────────────────────────────────────────────────────
-  function mascaraCNPJ(e) {
-    let d = e.target.value.replace(/\D/g, '').slice(0, 14);
-    if (d.length > 12)      d = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, '$1.$2.$3/$4-$5');
-    else if (d.length > 8)  d = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4})/,        '$1.$2.$3/$4');
-    else if (d.length > 5)  d = d.replace(/^(\d{2})(\d{3})(\d{0,3})/,               '$1.$2.$3');
-    else if (d.length > 2)  d = d.replace(/^(\d{2})(\d{0,3})/,                       '$1.$2');
-    e.target.value = d;
   }
 
   // ─── TOTAIS ───────────────────────────────────────────────────────────────────
@@ -704,10 +890,10 @@
     }
 
     check('razao-social', 'err-rs',    v => v.trim().length > 0);
-    check('cnpj',         'err-cnpj',  v => /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/.test(v));
+    check('cnpj',         'err-cnpj',  v => v.replace(/\D/g, '').length >= 11);
     check('email',        'err-email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()));
 
-    const blocos = document.querySelectorAll('.prod-bloco');
+    const blocos  = document.querySelectorAll('.prod-bloco');
     const errProd = document.getElementById('err-prod');
     if (blocos.length === 0) {
       errProd.style.display = 'block'; ok = false;
@@ -731,18 +917,23 @@
   function coletar() {
     const produtos = [];
     document.querySelectorAll('.prod-bloco').forEach(b => {
+      const selEstilo = b.querySelector('.sel-estilo');
+      const opt       = selEstilo.options[selEstilo.selectedIndex];
+      const preco     = opt && opt.dataset.preco ? parseFloat(opt.dataset.preco) : 0;
       produtos.push({
         cervejaria: b.querySelector('.sel-forn').value,
-        produto:    b.querySelector('.sel-estilo').value,
-        quantidade: parseInt(b.querySelector('.inp-qty').value, 10)
+        produto:    selEstilo.value,
+        quantidade: parseInt(b.querySelector('.inp-qty').value, 10),
+        preco
       });
     });
     const totalUnidades   = produtos.reduce((s, p) => s + p.quantidade, 0);
     const valorArrecadado = (totalUnidades * VALOR_SC_UN).toFixed(2);
     return {
-      razaoSocial:     document.getElementById('razao-social').value.trim(),
-      cnpj:            document.getElementById('cnpj').value.trim(),
-      email:           document.getElementById('email').value.trim(),
+      tipo:         tipoAtual,
+      razaoSocial:  document.getElementById('razao-social').value.trim(),
+      cnpj:         document.getElementById('cnpj').value.trim(),
+      email:        document.getElementById('email').value.trim(),
       produtos,
       totalUnidades,
       valorArrecadado
@@ -768,8 +959,7 @@
     document.getElementById('feedback-erro').hidden = true;
 
     if (!validar()) {
-      document.querySelector('.err, .err-prod[style*="block"]')
-        ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      document.querySelector('.err')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
@@ -796,12 +986,17 @@
     const valorFmt = Number(d.valorArrecadado).toLocaleString('pt-BR', {
       style: 'currency', currency: 'BRL'
     });
+    const tipoLabel = d.tipo === 'pdv' ? 'PDV' : 'Consumidor';
 
     const linhas = [
-      ['PDV',    d.razaoSocial],
-      ['CNPJ',   d.cnpj],
-      ['E-mail', d.email],
-      ...d.produtos.map(p => [p.produto, `${p.quantidade} un`]),
+      ['Tipo',    tipoLabel],
+      ['Nome / Razão Social', d.razaoSocial],
+      ['CNPJ / CPF', d.cnpj],
+      ['E-mail',  d.email],
+      ...d.produtos.map(p => [
+        p.produto,
+        `${p.quantidade} un × R$ ${p.preco.toFixed(2).replace('.', ',')} = R$ ${(p.quantidade * p.preco).toFixed(2).replace('.', ',')}`
+      ]),
       ['Total de unidades', String(d.totalUnidades)]
     ];
 
@@ -810,26 +1005,21 @@
       .join('');
 
     document.getElementById('suc-valor-sc').textContent = valorFmt;
-    document.getElementById('form-brinde').hidden      = true;
+    document.getElementById('tipo-badge').hidden      = true;
+    document.getElementById('form-brinde').hidden     = true;
     document.getElementById('feedback-sucesso').hidden = false;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // ─── RESET ────────────────────────────────────────────────────────────────────
-  function resetarForm() {
-    ['razao-social', 'cnpj', 'email'].forEach(id => {
-      const el = document.getElementById(id);
-      el.value = '';
-      el.classList.remove('err');
-    });
-    document.querySelectorAll('.field-err').forEach(e => e.classList.remove('on'));
-    document.getElementById('prod-container').innerHTML = '';
-    blocoSeq = 0;
+  // ─── NOVO REGISTRO (mantém o tipo) ────────────────────────────────────────────
+  function novoRegistro() {
+    limparForm();
     adicionarBloco();
     recalc();
+    document.getElementById('feedback-sucesso').hidden = false;
+    document.getElementById('tipo-badge').hidden  = false;
+    document.getElementById('form-brinde').hidden = false;
     document.getElementById('feedback-sucesso').hidden = true;
-    document.getElementById('feedback-erro').hidden    = true;
-    document.getElementById('form-brinde').hidden      = false;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 </script>
