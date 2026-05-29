@@ -606,7 +606,7 @@
         </div>
         <div class="row-2">
           <div class="field">
-            <label for="cnpj">CNPJ / CPF <span class="req">*</span></label>
+            <label for="cnpj" id="label-doc">CNPJ <span class="req">*</span></label>
             <input type="text" id="cnpj" placeholder="00.000.000/0000-00" maxlength="18" inputmode="numeric">
             <span class="field-err" id="err-cnpj">Documento inválido.</span>
           </div>
@@ -752,6 +752,21 @@
     tipoAtual = tipo;
     const labels = { pdv: 'PDV', consumidor: 'Consumidor' };
     document.getElementById('tipo-label').textContent = labels[tipo];
+
+    // Ajusta campo de documento conforme tipo
+    const inputDoc = document.getElementById('cnpj');
+    const labelDoc = document.getElementById('label-doc');
+    if (tipo === 'consumidor') {
+      labelDoc.innerHTML = 'CPF <span class="req">*</span>';
+      inputDoc.placeholder = '000.000.000-00';
+      inputDoc.maxLength = 14;
+    } else {
+      labelDoc.innerHTML = 'CNPJ <span class="req">*</span>';
+      inputDoc.placeholder = '00.000.000/0000-00';
+      inputDoc.maxLength = 18;
+    }
+    inputDoc.value = '';
+
     document.getElementById('splash').hidden      = true;
     document.getElementById('tipo-badge').hidden  = false;
     document.getElementById('form-brinde').hidden = false;
@@ -785,11 +800,19 @@
 
   // ─── MÁSCARA DOCUMENTO ────────────────────────────────────────────────────────
   function mascaraDocumento(e) {
-    let d = e.target.value.replace(/\D/g, '').slice(0, 14);
-    if (d.length > 12)      d = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, '$1.$2.$3/$4-$5');
-    else if (d.length > 8)  d = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4})/,        '$1.$2.$3/$4');
-    else if (d.length > 5)  d = d.replace(/^(\d{2})(\d{3})(\d{0,3})/,               '$1.$2.$3');
-    else if (d.length > 2)  d = d.replace(/^(\d{2})(\d{0,3})/,                       '$1.$2');
+    let d = e.target.value.replace(/\D/g, '');
+    if (tipoAtual === 'consumidor') {
+      d = d.slice(0, 11);
+      if (d.length > 9)      d = d.replace(/^(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4');
+      else if (d.length > 6) d = d.replace(/^(\d{3})(\d{3})(\d{0,3})/,        '$1.$2.$3');
+      else if (d.length > 3) d = d.replace(/^(\d{3})(\d{0,3})/,               '$1.$2');
+    } else {
+      d = d.slice(0, 14);
+      if (d.length > 12)      d = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, '$1.$2.$3/$4-$5');
+      else if (d.length > 8)  d = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4})/,        '$1.$2.$3/$4');
+      else if (d.length > 5)  d = d.replace(/^(\d{2})(\d{3})(\d{0,3})/,               '$1.$2.$3');
+      else if (d.length > 2)  d = d.replace(/^(\d{2})(\d{0,3})/,                       '$1.$2');
+    }
     e.target.value = d;
   }
 
@@ -890,7 +913,10 @@
     }
 
     check('razao-social', 'err-rs',    v => v.trim().length > 0);
-    check('cnpj',         'err-cnpj',  v => v.replace(/\D/g, '').length >= 11);
+    check('cnpj',         'err-cnpj',  v => {
+      const n = v.replace(/\D/g, '').length;
+      return tipoAtual === 'consumidor' ? n === 11 : n === 14;
+    });
     check('email',        'err-email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()));
 
     const blocos  = document.querySelectorAll('.prod-bloco');
