@@ -545,6 +545,21 @@
       border-top: 4px solid var(--dark);
       padding: 24px 32px;
       display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .footer-parceria {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(26,18,8,.6);
+    }
+    .footer-logos-row {
+      display: flex;
       align-items: center;
       justify-content: center;
       gap: 48px;
@@ -554,9 +569,9 @@
       object-fit: contain;
       filter: brightness(0) opacity(0.75);
     }
-    .footer-logos img:nth-child(1) { height: 112px; } /* Nineties */
-    .footer-logos img:nth-child(2) { height: 44px; }  /* Germânia — wordmark largo */
-    .footer-logos img:nth-child(3) { height: 112px; } /* Pangea */
+    .footer-logos-row img:nth-child(1) { height: 112px; } /* Nineties */
+    .footer-logos-row img:nth-child(2) { height: 44px; }  /* Germânia — wordmark largo */
+    .footer-logos-row img:nth-child(3) { height: 112px; } /* Pangea */
     .footer-logo-txt {
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 900;
@@ -570,7 +585,6 @@
 <body>
 
 <header class="site-header">
-  <p class="header-marca">Germânia &middot; Nineties Beer &middot; Pangea</p>
   <h1 class="header-title">Solidariedade em <span>Cada Brinde</span></h1>
   <p class="header-sub">Registro de Pedidos — Campanha Solidária</p>
   <span class="header-badge">R$ 0,50 por unidade &rarr; Santa Casa de Vinhedo</span>
@@ -712,9 +726,12 @@
 </main>
 
 <footer class="footer-logos">
-  <img src="https://res.cloudinary.com/drq9nnioe/image/upload/v1780344848/NINETIES_rugqir.png" alt="Nineties Beer">
-  <img src="https://res.cloudinary.com/drq9nnioe/image/upload/q_auto/f_auto/v1780345710/logo_germania_red_1_zav8sj.png" alt="Germânia">
-  <img src="https://res.cloudinary.com/drq9nnioe/image/upload/v1780344848/PANGEA_iz2crr.png" alt="Pangea">
+  <div class="footer-parceria">Uma parceria entre:</div>
+  <div class="footer-logos-row">
+    <img src="https://res.cloudinary.com/drq9nnioe/image/upload/v1780344848/NINETIES_rugqir.png" alt="Nineties Beer">
+    <img src="https://res.cloudinary.com/drq9nnioe/image/upload/q_auto/f_auto/v1780345710/logo_germania_red_1_zav8sj.png" alt="Germânia">
+    <img src="https://res.cloudinary.com/drq9nnioe/image/upload/v1780344848/PANGEA_iz2crr.png" alt="Pangea">
+  </div>
 </footer>
 
 <script>
