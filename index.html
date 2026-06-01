@@ -547,12 +547,28 @@
     .btn-novo:hover { background: var(--amber); color: var(--dark); }
 
     /* ── FOOTER ── */
-    footer {
-      text-align: center;
-      padding: 16px;
-      font-size: 12px;
-      color: var(--dark-mid);
-      opacity: .55;
+    .footer-logos {
+      background: var(--amber) url('https://res.cloudinary.com/drq9nnioe/image/upload/v1780343183/bg_ppt_t8iks6.png') center/cover;
+      border-top: 4px solid var(--dark);
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .footer-logos img {
+      height: 38px;
+      object-fit: contain;
+      filter: brightness(0) opacity(0.75);
+    }
+    .footer-logo-txt {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(26,18,8,.75);
     }
   </style>
 </head>
@@ -700,7 +716,11 @@
 
 </main>
 
-<footer>Solidariedade em Cada Brinde &mdash; Germânia &middot; Nineties Beer &middot; Pangea &copy; 2026</footer>
+<footer class="footer-logos">
+  <img src="https://res.cloudinary.com/drq9nnioe/image/upload/v1780344848/NINETIES_rugqir.png" alt="Nineties Beer">
+  <span class="footer-logo-txt">Germânia</span>
+  <span class="footer-logo-txt">Pangea</span>
+</footer>
 
 <script>
   const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyKGw7Xyokp1UrzXbH1LHaTF_ZFVzHkn5tX43t3kjH0MTL7Q_n9mvfnMouVFmQotF5C/exec';
