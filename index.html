@@ -26,7 +26,10 @@
       color: var(--dark);
       min-height: 100vh;
       position: relative;
+      display: flex;
+      flex-direction: column;
     }
+    main { flex: 1; }
     body::before {
       content: '';
       position: fixed;
@@ -36,7 +39,7 @@
       pointer-events: none;
       z-index: 0;
     }
-    main { position: relative; z-index: 1; }
+    main { position: relative; z-index: 1; flex: 1; }
     header.site-header { position: relative; z-index: 1; }
 
     /* ── HEADER ── */
@@ -558,7 +561,7 @@
       flex-wrap: wrap;
     }
     .footer-logos img {
-      height: 38px;
+      height: 52px;
       object-fit: contain;
       filter: brightness(0) opacity(0.75);
     }
