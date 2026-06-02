@@ -136,87 +136,6 @@
     }
     .card-body { padding: 24px; }
 
-    /* ── SPLASH ── */
-    .splash-body {
-      padding: 28px 24px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    @media (max-width: 480px) { .splash-body { grid-template-columns: 1fr; } }
-
-    .splash-card {
-      border: 2px solid #E8D9C4;
-      border-radius: 10px;
-      padding: 28px 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all .2s;
-      background: #FDFAF5;
-      font-family: 'Barlow', sans-serif;
-      width: 100%;
-    }
-    .splash-card:hover {
-      border-color: var(--amber);
-      background: rgba(232,146,26,.06);
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(232,146,26,.2);
-    }
-    .splash-icon {
-      font-size: 40px;
-      margin-bottom: 14px;
-      display: block;
-    }
-    .splash-card h3 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: 22px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--dark);
-      margin-bottom: 8px;
-    }
-    .splash-card p {
-      font-size: 13px;
-      color: var(--dark-mid);
-      line-height: 1.5;
-    }
-
-    /* ── TIPO BADGE ── */
-    .tipo-badge {
-      background: var(--dark);
-      border-radius: 8px;
-      padding: 12px 18px;
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .tipo-badge-label {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: rgba(255,255,255,.6);
-    }
-    .tipo-badge-label strong {
-      color: var(--amber-lt);
-      margin-left: 6px;
-    }
-    .btn-trocar {
-      background: none;
-      border: 1px solid rgba(255,255,255,.25);
-      border-radius: 4px;
-      padding: 4px 12px;
-      font-family: 'Barlow', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      color: rgba(255,255,255,.6);
-      cursor: pointer;
-      transition: all .18s;
-    }
-    .btn-trocar:hover { border-color: var(--amber-lt); color: var(--amber-lt); }
 
     /* ── CAMPOS ── */
     .field { margin-bottom: 18px; }
@@ -615,36 +534,8 @@
     <p id="erro-msg"></p>
   </div>
 
-  <!-- SPLASH: SELEÇÃO DE TIPO -->
-  <div id="splash">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-dot"></div>
-        <h2>Como deseja registrar?</h2>
-      </div>
-      <div class="splash-body">
-        <button type="button" class="splash-card" id="btn-pdv">
-          <span class="splash-icon">🏪</span>
-          <h3>Sou PDV</h3>
-          <p>Estabelecimento parceiro que comercializa os produtos da campanha</p>
-        </button>
-        <button type="button" class="splash-card" id="btn-consumidor">
-          <span class="splash-icon">🍺</span>
-          <h3>Sou Consumidor</h3>
-          <p>Consumidor final que adquiriu produtos participantes da campanha</p>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- BADGE DE TIPO -->
-  <div id="tipo-badge" class="tipo-badge" hidden>
-    <span class="tipo-badge-label">Registrando como <strong id="tipo-label"></strong></span>
-    <button type="button" class="btn-trocar" id="btn-trocar">Trocar</button>
-  </div>
-
   <!-- FORMULÁRIO -->
-  <form id="form-brinde" novalidate hidden>
+  <form id="form-brinde" novalidate>
 
     <!-- IDENTIFICAÇÃO -->
     <div class="card">
@@ -660,7 +551,7 @@
         </div>
         <div class="row-2">
           <div class="field">
-            <label for="cnpj" id="label-doc">CNPJ <span class="req">*</span></label>
+            <label for="cnpj">CNPJ <span class="req">*</span></label>
             <input type="text" id="cnpj" placeholder="00.000.000/0000-00" maxlength="18" inputmode="numeric">
             <span class="field-err" id="err-cnpj">Documento inválido.</span>
           </div>
@@ -756,96 +647,34 @@
   const VALOR_SC_UN = 1.00;
 
   const CATALOGO = {
-    pdv: {
-      Germania: { label: 'Germânia', estilos: [
-        { nome: 'Pilsen',   preco: 12.50 },
-        { nome: 'Vinhedo',  preco: 13.70 },
-        { nome: 'Escuro',   preco: 12.81 },
-        { nome: 'IPA',      preco: 20.50 }
-      ]},
-      Nineties: { label: 'Nineties Bier', estilos: [
-        { nome: 'Pilsen',     preco: 13.20 },
-        { nome: 'IPA',        preco: 21.00 },
-        { nome: 'Sem Álcool', preco: 15.70 }
-      ]},
-      Pangea: { label: 'Pangea', estilos: [
-        { nome: 'Pilsen',      preco: 16.90 },
-        { nome: 'Session IPA', preco: 19.90 },
-        { nome: 'Dry Stout',   preco: 19.90 }
-      ]}
-    },
-    consumidor: {
-      Germania: { label: 'Germânia', estilos: [
-        { nome: 'Pilsen',  preco: 17.99 },
-        { nome: 'Vinhedo', preco: 18.99 },
-        { nome: 'Escuro',  preco: 18.50 },
-        { nome: 'IPA',     preco: 26.99 }
-      ]},
-      Nineties: { label: 'Nineties Bier', estilos: [
-        { nome: 'Pilsen',     preco: 19.00 },
-        { nome: 'IPA',        preco: 28.00 },
-        { nome: 'Sem Álcool', preco: 24.00 }
-      ]},
-      Pangea: { label: 'Pangea', estilos: [
-        { nome: 'Pilsen',      preco: 24.00 },
-        { nome: 'Session IPA', preco: 32.00 },
-        { nome: 'Dry Stout',   preco: 32.00 }
-      ]}
-    }
+    Germania: { label: 'Germânia', estilos: [
+      { nome: 'Pilsen',   preco: 12.50 },
+      { nome: 'Vinhedo',  preco: 13.70 },
+      { nome: 'Escuro',   preco: 12.81 },
+      { nome: 'IPA',      preco: 20.50 }
+    ]},
+    Nineties: { label: 'Nineties Bier', estilos: [
+      { nome: 'Pilsen',     preco: 13.20 },
+      { nome: 'IPA',        preco: 21.00 },
+      { nome: 'Sem Álcool', preco: 15.70 }
+    ]},
+    Pangea: { label: 'Pangea', estilos: [
+      { nome: 'Pilsen',      preco: 16.90 },
+      { nome: 'Session IPA', preco: 19.90 },
+      { nome: 'Dry Stout',   preco: 19.90 }
+    ]}
   };
 
-  let tipoAtual = null;
-  let blocoSeq  = 0;
+  let blocoSeq = 0;
 
   // ─── BOOT ─────────────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('btn-pdv').addEventListener('click', () => selecionarTipo('pdv'));
-    document.getElementById('btn-consumidor').addEventListener('click', () => selecionarTipo('consumidor'));
-    document.getElementById('btn-trocar').addEventListener('click', voltarSplash);
+    adicionarBloco();
     document.getElementById('btn-add').addEventListener('click', adicionarBloco);
     document.getElementById('form-brinde').addEventListener('submit', onSubmit);
     document.getElementById('btn-novo').addEventListener('click', novoRegistro);
     document.getElementById('cnpj').addEventListener('input', mascaraDocumento);
   });
-
-  // ─── SPLASH ───────────────────────────────────────────────────────────────────
-  function selecionarTipo(tipo) {
-    tipoAtual = tipo;
-    const labels = { pdv: 'PDV', consumidor: 'Consumidor' };
-    document.getElementById('tipo-label').textContent = labels[tipo];
-
-    // Ajusta campo de documento conforme tipo
-    const inputDoc = document.getElementById('cnpj');
-    const labelDoc = document.getElementById('label-doc');
-    if (tipo === 'consumidor') {
-      labelDoc.innerHTML = 'CPF <span class="req">*</span>';
-      inputDoc.placeholder = '000.000.000-00';
-      inputDoc.maxLength = 14;
-    } else {
-      labelDoc.innerHTML = 'CNPJ <span class="req">*</span>';
-      inputDoc.placeholder = '00.000.000/0000-00';
-      inputDoc.maxLength = 18;
-    }
-    inputDoc.value = '';
-
-    document.getElementById('splash').hidden      = true;
-    document.getElementById('tipo-badge').hidden  = false;
-    document.getElementById('form-brinde').hidden = false;
-    document.getElementById('prod-container').innerHTML = '';
-    blocoSeq = 0;
-    adicionarBloco();
-    recalc();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function voltarSplash() {
-    tipoAtual = null;
-    document.getElementById('splash').hidden      = false;
-    document.getElementById('tipo-badge').hidden  = true;
-    document.getElementById('form-brinde').hidden = true;
-    document.getElementById('feedback-erro').hidden = true;
-    limparForm();
-  }
 
   function limparForm() {
     ['razao-social', 'cnpj', 'email'].forEach(id => {
@@ -861,19 +690,11 @@
 
   // ─── MÁSCARA DOCUMENTO ────────────────────────────────────────────────────────
   function mascaraDocumento(e) {
-    let d = e.target.value.replace(/\D/g, '');
-    if (tipoAtual === 'consumidor') {
-      d = d.slice(0, 11);
-      if (d.length > 9)      d = d.replace(/^(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4');
-      else if (d.length > 6) d = d.replace(/^(\d{3})(\d{3})(\d{0,3})/,        '$1.$2.$3');
-      else if (d.length > 3) d = d.replace(/^(\d{3})(\d{0,3})/,               '$1.$2');
-    } else {
-      d = d.slice(0, 14);
-      if (d.length > 12)      d = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, '$1.$2.$3/$4-$5');
-      else if (d.length > 8)  d = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4})/,        '$1.$2.$3/$4');
-      else if (d.length > 5)  d = d.replace(/^(\d{2})(\d{3})(\d{0,3})/,               '$1.$2.$3');
-      else if (d.length > 2)  d = d.replace(/^(\d{2})(\d{0,3})/,                       '$1.$2');
-    }
+    let d = e.target.value.replace(/\D/g, '').slice(0, 14);
+    if (d.length > 12)      d = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, '$1.$2.$3/$4-$5');
+    else if (d.length > 8)  d = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4})/,        '$1.$2.$3/$4');
+    else if (d.length > 5)  d = d.replace(/^(\d{2})(\d{3})(\d{0,3})/,               '$1.$2.$3');
+    else if (d.length > 2)  d = d.replace(/^(\d{2})(\d{0,3})/,                       '$1.$2');
     e.target.value = d;
   }
 
@@ -881,7 +702,7 @@
   function adicionarBloco() {
     blocoSeq++;
     const container = document.getElementById('prod-container');
-    const opcoesForn = Object.entries(CATALOGO[tipoAtual])
+    const opcoesForn = Object.entries(CATALOGO)
       .map(([key, m]) => `<option value="${key}">${m.label}</option>`)
       .join('');
 
@@ -934,12 +755,13 @@
     const bloco     = sel.closest('.prod-bloco');
     const selEstilo = bloco.querySelector('.sel-estilo');
     const key       = sel.value;
-    const marca     = CATALOGO[tipoAtual][key];
+    const marca     = CATALOGO[key];
 
     selEstilo.innerHTML = marca
-      ? '<option value="">Selecione…</option>' + marca.estilos.map(e =>
-          `<option value="${e.nome}" data-preco="${e.preco}">${e.nome} — R$ ${e.preco.toFixed(2).replace('.', ',')}</option>`
-        ).join('')
+      ? '<option value="">Selecione…</option>' + marca.estilos.map(e => {
+          const precoPackStr = (e.preco * 6).toFixed(2).replace('.', ',');
+          return `<option value="${e.nome}" data-preco="${(e.preco * 6).toFixed(2)}">${e.nome} — Pack 6 und. — R$ ${precoPackStr}</option>`;
+        }).join('')
       : '<option value="">Selecione o fornecedor</option>';
 
     selEstilo.disabled = !key;
@@ -949,14 +771,15 @@
 
   // ─── TOTAIS ───────────────────────────────────────────────────────────────────
   function recalc() {
-    let total = 0;
+    let totalPacks = 0;
     document.querySelectorAll('.inp-qty').forEach(inp => {
       const v = parseInt(inp.value, 10);
-      if (!isNaN(v) && v > 0) total += v;
+      if (!isNaN(v) && v > 0) totalPacks += v;
     });
-    document.getElementById('total-un').textContent = total;
+    const totalGrowlers = totalPacks * 6;
+    document.getElementById('total-un').textContent = totalGrowlers;
     document.getElementById('total-sc').textContent =
-      'R$ ' + (total * VALOR_SC_UN).toFixed(2).replace('.', ',');
+      'R$ ' + (totalGrowlers * VALOR_SC_UN).toFixed(2).replace('.', ',');
   }
 
   // ─── VALIDAÇÃO ────────────────────────────────────────────────────────────────
@@ -974,10 +797,7 @@
     }
 
     check('razao-social', 'err-rs',    v => v.trim().length > 0);
-    check('cnpj',         'err-cnpj',  v => {
-      const n = v.replace(/\D/g, '').length;
-      return tipoAtual === 'consumidor' ? n === 11 : n === 14;
-    });
+    check('cnpj',         'err-cnpj',  v => v.replace(/\D/g, '').length === 14);
     check('email',        'err-email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()));
 
     const blocos  = document.querySelectorAll('.prod-bloco');
@@ -1014,10 +834,10 @@
         preco
       });
     });
-    const totalUnidades   = produtos.reduce((s, p) => s + p.quantidade, 0);
+    const totalUnidades   = produtos.reduce((s, p) => s + p.quantidade * 6, 0);
     const valorArrecadado = (totalUnidades * VALOR_SC_UN).toFixed(2);
     return {
-      tipo:         tipoAtual,
+      tipo:         'pdv',
       razaoSocial:  document.getElementById('razao-social').value.trim(),
       cnpj:         document.getElementById('cnpj').value.trim(),
       email:        document.getElementById('email').value.trim(),
@@ -1103,10 +923,8 @@
     limparForm();
     adicionarBloco();
     recalc();
-    document.getElementById('feedback-sucesso').hidden = false;
-    document.getElementById('tipo-badge').hidden  = false;
-    document.getElementById('form-brinde').hidden = false;
     document.getElementById('feedback-sucesso').hidden = true;
+    document.getElementById('form-brinde').hidden      = false;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 </script>
