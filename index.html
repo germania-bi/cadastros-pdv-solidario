@@ -78,6 +78,12 @@
       font-weight: 500;
       color: rgba(26,18,8,.7);
     }
+    .header-logo-principal {
+      max-width: 340px;
+      width: 100%;
+      height: auto;
+      margin: 8px 0;
+    }
     .header-badge {
       display: inline-block;
       margin-top: 16px;
@@ -585,8 +591,8 @@
 <body>
 
 <header class="site-header">
-  <h1 class="header-title">Solidariedade em <span>Cada Brinde</span></h1>
-  <span class="header-badge">R$ 0,50 por unidade &rarr; Santa Casa de Vinhedo</span>
+  <img src="https://res.cloudinary.com/drq9nnioe/image/upload/v1780345507/LOGO-06_xrddmh.png" alt="Solidariedade em Cada Brinde" class="header-logo-principal">
+  <span class="header-badge">R$ 1,00 por unidade &rarr; Santa Casa de Vinhedo</span>
 </header>
 
 <main>
@@ -735,7 +741,7 @@
 
 <script>
   const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyKGw7Xyokp1UrzXbH1LHaTF_ZFVzHkn5tX43t3kjH0MTL7Q_n9mvfnMouVFmQotF5C/exec';
-  const VALOR_SC_UN = 0.50;
+  const VALOR_SC_UN = 1.00;
 
   const CATALOGO = {
     pdv: {
