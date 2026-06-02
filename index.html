@@ -555,11 +555,6 @@
             <input type="text" id="cnpj" placeholder="00.000.000/0000-00" maxlength="18" inputmode="numeric">
             <span class="field-err" id="err-cnpj">Documento inválido.</span>
           </div>
-          <div class="field">
-            <label for="email">E-mail <span class="req">*</span></label>
-            <input type="email" id="email" placeholder="contato@exemplo.com.br">
-            <span class="field-err" id="err-email">E-mail inválido.</span>
-          </div>
         </div>
       </div>
     </div>
@@ -677,7 +672,7 @@
   });
 
   function limparForm() {
-    ['razao-social', 'cnpj', 'email'].forEach(id => {
+    ['razao-social', 'cnpj'].forEach(id => {
       const el = document.getElementById(id);
       el.value = '';
       el.classList.remove('err');
@@ -798,7 +793,6 @@
 
     check('razao-social', 'err-rs',    v => v.trim().length > 0);
     check('cnpj',         'err-cnpj',  v => v.replace(/\D/g, '').length === 14);
-    check('email',        'err-email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()));
 
     const blocos  = document.querySelectorAll('.prod-bloco');
     const errProd = document.getElementById('err-prod');
@@ -840,7 +834,6 @@
       tipo:         'pdv',
       razaoSocial:  document.getElementById('razao-social').value.trim(),
       cnpj:         document.getElementById('cnpj').value.trim(),
-      email:        document.getElementById('email').value.trim(),
       produtos,
       totalUnidades,
       valorArrecadado
@@ -899,7 +892,6 @@
       ['Tipo',    tipoLabel],
       ['Nome / Razão Social', d.razaoSocial],
       ['CNPJ / CPF', d.cnpj],
-      ['E-mail',  d.email],
       ...d.produtos.map(p => [
         p.produto,
         `${p.quantidade} un × R$ ${p.preco.toFixed(2).replace('.', ',')} = R$ ${(p.quantidade * p.preco).toFixed(2).replace('.', ',')}`
@@ -912,7 +904,6 @@
       .join('');
 
     document.getElementById('suc-valor-sc').textContent = valorFmt;
-    document.getElementById('tipo-badge').hidden      = true;
     document.getElementById('form-brinde').hidden     = true;
     document.getElementById('feedback-sucesso').hidden = false;
     window.scrollTo({ top: 0, behavior: 'smooth' });
