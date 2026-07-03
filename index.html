@@ -891,7 +891,7 @@
       ['CNPJ / CPF', d.cnpj],
       ...d.produtos.map(p => [
         p.produto,
-        `${p.quantidade} un × R$ ${p.preco.toFixed(2).replace('.', ',')} = R$ ${(p.quantidade * p.preco).toFixed(2).replace('.', ',')}`
+        `${p.quantidade} un`
       ]),
       ['Total de unidades', String(d.totalUnidades)]
     ];
