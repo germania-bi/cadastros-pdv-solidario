@@ -640,18 +640,18 @@
   const VALOR_SC_UN = 1.00;
 
   const CATALOGO = {
-    Germania: { label: 'Germânia', estilos: [
+    Germania: { label: 'Germânia', formato: 'Growler', estilos: [
       { nome: 'Pilsen',   preco: 12.50 },
       { nome: 'Vinhedo',  preco: 13.70 },
       { nome: 'Escuro',   preco: 12.81 },
       { nome: 'IPA',      preco: 20.50 }
     ]},
-    Nineties: { label: 'Nineties Bier', estilos: [
+    Nineties: { label: 'Nineties Bier', formato: 'Long Neck 355ml', estilos: [
       { nome: 'Pilsen',     preco: 13.20 },
       { nome: 'IPA',        preco: 21.00 },
       { nome: 'Sem Álcool', preco: 15.70 }
     ]},
-    Pangea: { label: 'Pangea', estilos: [
+    Pangea: { label: 'Pangea', formato: 'Lata 473ml', estilos: [
       { nome: 'Pilsen',      preco: 16.90 },
       { nome: 'Session IPA', preco: 19.90 },
       { nome: 'Dry Stout',   preco: 19.90 }
@@ -753,7 +753,7 @@
     selEstilo.innerHTML = marca
       ? '<option value="">Selecione…</option>' + marca.estilos.map(e => {
           const precoPackStr = (e.preco * 6).toFixed(2).replace('.', ',');
-          return `<option value="${e.nome}" data-preco="${(e.preco * 6).toFixed(2)}">${e.nome} — Pack 6 und. — R$ ${precoPackStr}</option>`;
+          return `<option value="${e.nome}" data-preco="${(e.preco * 6).toFixed(2)}">${e.nome} — ${marca.formato} — Pack 6 und. — R$ ${precoPackStr}</option>`;
         }).join('')
       : '<option value="">Selecione o fornecedor</option>';
 
