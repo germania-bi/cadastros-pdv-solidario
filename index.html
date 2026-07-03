@@ -752,8 +752,7 @@
 
     selEstilo.innerHTML = marca
       ? '<option value="">Selecione…</option>' + marca.estilos.map(e => {
-          const precoPackStr = (e.preco * 6).toFixed(2).replace('.', ',');
-          return `<option value="${e.nome}" data-preco="${(e.preco * 6).toFixed(2)}">${e.nome} — ${marca.formato} — Pack 6 und. — R$ ${precoPackStr}</option>`;
+          return `<option value="${e.nome}" data-preco="${(e.preco * 6).toFixed(2)}">${e.nome} — ${marca.formato} — Pack 6 und.</option>`;
         }).join('')
       : '<option value="">Selecione o fornecedor</option>';
 
